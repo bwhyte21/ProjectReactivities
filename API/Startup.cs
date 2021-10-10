@@ -37,6 +37,7 @@ namespace ProjectReactivitiesAPI
 
             app.UseHttpsRedirection();
 
+            // Routing Middleware responsible for routing to the endpoints (below)
             app.UseRouting();
 
             app.UseAuthorization();

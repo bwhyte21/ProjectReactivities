@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ProjectReactivitiesAPI.Controllers
 {
   [ApiController]
-  [Route("[controller]")]
+  [Route("[controller]")] // Takes the name of the controller as the name of the route.
   public class WeatherForecastController : ControllerBase
   {
     private static readonly string[] Summaries = new[]
@@ -23,7 +23,7 @@ namespace ProjectReactivitiesAPI.Controllers
       _logger = logger;
     }
 
-    [HttpGet]
+    [HttpGet] // An endpoint for a GET request.
     public IEnumerable<WeatherForecast> Get()
     {
       var rng = new Random();
