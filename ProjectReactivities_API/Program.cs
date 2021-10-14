@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ProjectReactivitiesAPI
+namespace ProjectReactivities_API
 {
   public class Program
   {

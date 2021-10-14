@@ -3,20 +3,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31727.386
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectReactivitiesAPI", "API\ProjectReactivitiesAPI.csproj", "{ECF59652-D072-49FD-A920-FF0003C8E710}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectReactivities_API", "ProjectReactivities_API\ProjectReactivities_API.csproj", "{ECF59652-D072-49FD-A920-FF0003C8E710}"
 	ProjectSection(ProjectDependencies) = postProject
 		{CE164F31-CE49-4C07-87CE-5168EB8EAB9B} = {CE164F31-CE49-4C07-87CE-5168EB8EAB9B}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{CE164F31-CE49-4C07-87CE-5168EB8EAB9B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectReactivities_Application", "ProjectReactivities_Application\ProjectReactivities_Application.csproj", "{CE164F31-CE49-4C07-87CE-5168EB8EAB9B}"
 	ProjectSection(ProjectDependencies) = postProject
 		{0E08CABD-673C-4664-9B06-70ED323B5996} = {0E08CABD-673C-4664-9B06-70ED323B5996}
 		{41A80ED9-AA2F-4DAF-BB5E-6A3BDFB265CD} = {41A80ED9-AA2F-4DAF-BB5E-6A3BDFB265CD}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{0E08CABD-673C-4664-9B06-70ED323B5996}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectReactivities_Domain", "ProjectReactivities_Domain\ProjectReactivities_Domain.csproj", "{0E08CABD-673C-4664-9B06-70ED323B5996}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Persistence", "Persistence\Persistence.csproj", "{41A80ED9-AA2F-4DAF-BB5E-6A3BDFB265CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectReactivities_DataAccess", "ProjectReactivities_DataAccess\ProjectReactivities_DataAccess.csproj", "{41A80ED9-AA2F-4DAF-BB5E-6A3BDFB265CD}"
 	ProjectSection(ProjectDependencies) = postProject
 		{0E08CABD-673C-4664-9B06-70ED323B5996} = {0E08CABD-673C-4664-9B06-70ED323B5996}
 	EndProjectSection
