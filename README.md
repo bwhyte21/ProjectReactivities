@@ -1,6 +1,6 @@
 # ProjectReactivities
 * A project created with the combined forces of .Net 5 (backend), React 17 (frontend), and MobX 6(state management)
-** A multi-project solution using the the ASP.NET Core WebAPI and the React app using the DotNet CLI and the create-react-app utility.
+    * A multi-project solution using the the ASP.NET Core WebAPI and the React app using the DotNet CLI and the create-react-app utility.
 
 ## Project checklist
 * [ ] Uses Clean Architecture and the CQRS + Mediator pattern
