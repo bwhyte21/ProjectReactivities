@@ -1,5 +1,4 @@
 # ProjectReactivities
----
 * .Net 5 (backend) + React 17 (frontend) + MobX 6(state management)
 * Setting up the developer environment
 * Creating a multi-project solution using the the ASP.NET Core WebAPI and the React app using the DotNet CLI and the create-react-app utility.
