@@ -9,14 +9,18 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectReactivities_DataAccess.Data;
+using ProjectReactivities_DataAccess.Initializer;
 
 namespace ProjectReactivities_API
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            /* Another way to create a DB if none exist, is to do it programatically on start, and apply any migrations available. */
+            /*
+             -Another way to create a DB if none exist, is to do it programatically on start, and apply any migrations available.
+             -Main is now async due to the async task of SeedData to seed the db on start if DB is empty.
+            */
 
             // Store host into a variable.
             var host = CreateHostBuilder(args).Build();
@@ -31,8 +35,12 @@ namespace ProjectReactivities_API
             {
                 // Acquire data context as a service.
                 var dataContext = services.GetRequiredService<ApplicationDbContext>();
+
                 // Apply any pending migrations.
-                dataContext.Database.Migrate();
+                await dataContext.Database.MigrateAsync();
+
+                // Seed database after the migration.
+                await Seed.SeedData(dataContext);
             }
             catch (Exception ex)
             {
@@ -42,7 +50,7 @@ namespace ProjectReactivities_API
             }
 
             // Don't forget to start the application!
-            host.Run();
+            await host.RunAsync();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args)
