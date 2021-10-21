@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ProjectReactivities_DataAccess\ProjectReactivities_DataAccess.csproj" />
+    <ProjectReference Include="..\ProjectReactivities_Domain\ProjectReactivities_Domain.csproj" />
+  </ItemGroup>
+
+</Project>

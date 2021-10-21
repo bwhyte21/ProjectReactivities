@@ -1,6 +1,6 @@
 using System;
 
-namespace ProjectReactivitiesAPI
+namespace ProjectReactivities_API
 {
   public class WeatherForecast
   {
