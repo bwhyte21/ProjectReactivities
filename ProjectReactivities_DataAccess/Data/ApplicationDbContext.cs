@@ -9,7 +9,7 @@ namespace ProjectReactivities_DataAccess.Data
     public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions options) : base(options) { }
-        
+
         /// <summary>
         /// Contain columns of activity properties via Activity.cs.
         /// </summary>

@@ -1,15 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace ProjectReactivities_API.Controllers
 {
-  [ApiController]
-  [Route("api/[controller]")]
-  public class BaseApiController : ControllerBase
-  {
-  }
+    [ApiController]
+    [Route("api/[controller]")]
+    public class BaseApiController : ControllerBase { }
 }
