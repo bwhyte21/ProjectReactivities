@@ -12,6 +12,7 @@ namespace ProjectReactivities_API
     {
         // Remodeling configuration member to a private one.
         private readonly IConfiguration _config;
+        private readonly string _corsPolicy = "CorsPolicy";
 
         public Startup(IConfiguration config)
         {
@@ -21,15 +22,30 @@ namespace ProjectReactivities_API
         // This method gets called by the runtime. Use this method to add services to the container. (Dependency Injection container)
         public void ConfigureServices(IServiceCollection services)
         {
+            #region Controllers Service
+
+            services.AddControllers();
+
+            #endregion
+         
             #region DbContext Service
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(_config.GetConnectionString("DefaultConnection")));
 
             #endregion
 
-            #region Controllers Service
+            #region CORS Policy Service
 
-            services.AddControllers();
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: _corsPolicy, policy =>
+                {
+                    // Allow the client-app to access this API to send and receive requests/responses.
+                    //policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000/");
+                    //policy.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin();
+                    policy.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod();
+                });
+            });
 
             #endregion
         }
@@ -45,6 +61,9 @@ namespace ProjectReactivities_API
 
             // Routing Middleware responsible for routing to the endpoints (below)
             app.UseRouting();
+
+            // CORS middleware (via CORS service) MUST be called AFTER UseRouting.
+            app.UseCors(_corsPolicy);
 
             app.UseAuthorization();
 
