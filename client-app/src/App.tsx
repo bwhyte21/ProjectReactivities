@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import logo from "./logo.svg";
-import "./App.css";
-import axios from "axios";
+import React, { useEffect, useState } from 'react';
+import logo from './logo.svg';
+import './App.css';
+import axios from 'axios';
 
 function App() {
   // Use the useState hook to help import Activities and set the response to 'activities'.
@@ -9,7 +9,7 @@ function App() {
 
   // Use the useEffect hook to use Axios to make our API call.
   useEffect(() => {
-    axios.get("https://localhost:5001/api/Activities").then((response: any) => {
+    axios.get('https://localhost:5001/api/Activities').then((response: any) => {
       // monitor response, remove later
       console.log(response);
       // Set the response data to activities.
