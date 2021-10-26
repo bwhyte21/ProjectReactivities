@@ -1,9 +1,11 @@
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ProjectReactivities_Application.Activities;
 using ProjectReactivities_DataAccess.Data;
 
 namespace ProjectReactivities_API
@@ -46,6 +48,12 @@ namespace ProjectReactivities_API
                     policy.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod();
                 });
             });
+
+            #endregion
+
+            #region MediatR Service
+            // Tell the MediatR where to find the handler(s).
+            services.AddMediatR(typeof(List.Handler).Assembly);
 
             #endregion
         }
