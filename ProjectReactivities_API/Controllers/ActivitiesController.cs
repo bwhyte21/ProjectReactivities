@@ -13,8 +13,10 @@ namespace ProjectReactivities_API.Controllers
     public class ActivitiesController : BaseApiController // We have the base api derivation here so the route doesn't need to be set each time.
     {
         #region Old DI Code
+
         // DI with Data Context
         //private readonly ApplicationDbContext _db;
+
         #endregion
 
         // DI with Application Layer
@@ -27,9 +29,11 @@ namespace ProjectReactivities_API.Controllers
         public ActivitiesController(IMediator mediator)
         {
             #region Old DI Code
+
             //_db = db;
+
             #endregion
-            
+
             // Using newly added MediatR
             _mediator = mediator;
         }
@@ -42,7 +46,9 @@ namespace ProjectReactivities_API.Controllers
         public async Task<ActionResult<List<Activity>>> GetActivities()
         {
             #region Old DI Code
+
             //return await _db.Activities.ToListAsync();
+
             #endregion
 
             // Using newly added MediatR from the App Layer to get list of all activities.
@@ -56,8 +62,10 @@ namespace ProjectReactivities_API.Controllers
         public async Task<ActionResult<Activity>> GetActivity(Guid id)
         {
             #region Old DI Code
+
             // Return activity based on id passed in (selected)
             //return await _db.Activities.FindAsync(id);
+
             #endregion
 
             // Return activity based on id passed in (selected)

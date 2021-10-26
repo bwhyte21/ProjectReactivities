@@ -29,7 +29,7 @@ namespace ProjectReactivities_API
             services.AddControllers();
 
             #endregion
-         
+
             #region DbContext Service
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(_config.GetConnectionString("DefaultConnection")));
@@ -52,6 +52,7 @@ namespace ProjectReactivities_API
             #endregion
 
             #region MediatR Service
+
             // Tell the MediatR where to find the handler(s).
             services.AddMediatR(typeof(List.Handler).Assembly);
 
