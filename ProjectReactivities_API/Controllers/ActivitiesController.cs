@@ -109,5 +109,17 @@ namespace ProjectReactivities_API.Controllers
             // Pass it off to the handler
             return Ok(await Mediator.Send(new Edit.Command { Activity = activity }));
         }
+
+
+        /// <summary>
+        /// Allow user to delete an activity.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> DeleteActivity(Guid id)
+        {
+            return Ok(await Mediator.Send(new Delete.Command { Id = id }));
+        }
     }
 }
