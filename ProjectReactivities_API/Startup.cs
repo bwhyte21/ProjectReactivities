@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ProjectReactivities_Application.Activities;
+using ProjectReactivities_Application.Core;
 using ProjectReactivities_DataAccess.Data;
 
 namespace ProjectReactivities_API
@@ -55,6 +56,12 @@ namespace ProjectReactivities_API
 
             // Tell the MediatR where to find the handler(s).
             services.AddMediatR(typeof(List.Handler).Assembly);
+
+            #endregion
+
+            #region AutoMapper Service
+
+            services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 
             #endregion
         }

@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ProjectReactivities_Application.Activities;
+using ProjectReactivities_Domain;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using ProjectReactivities_Application.Activities;
-using ProjectReactivities_DataAccess.Data;
-using ProjectReactivities_Domain;
 
 namespace ProjectReactivities_API.Controllers
 {
@@ -19,24 +16,28 @@ namespace ProjectReactivities_API.Controllers
 
         #endregion
 
+        #region Code Moved/Modified To BaseApiController
+
         // DI with Application Layer
-        private readonly IMediator _mediator;
+        //private readonly IMediator _mediator;
 
-        /// <summary>
-        /// CTOR
-        /// </summary>
-        /// <param name="mediator"></param>
-        public ActivitiesController(IMediator mediator)
-        {
-            #region Old DI Code
+        ///// <summary>
+        ///// CTOR
+        ///// </summary>
+        ///// <param name="mediator"></param>
+        //public ActivitiesController(IMediator mediator)
+        //{
+        //    #region Old DI Code
 
-            //_db = db;
+        //    //_db = db;
 
-            #endregion
+        //    #endregion
 
-            // Using newly added MediatR
-            _mediator = mediator;
-        }
+        //    // Using newly added MediatR
+        //    _mediator = mediator;
+        //}
+
+        #endregion
 
         /// <summary>
         /// Endpoint to pull full list of activities.
@@ -47,21 +48,30 @@ namespace ProjectReactivities_API.Controllers
         {
             #region Old DI Code
 
+            // The original code in this region has been moved to the Application Layer.
             //return await _db.Activities.ToListAsync();
+
+            // Using MediatR from the App Layer to get list of all activities.
+            //return await _mediator.Send(new List.Query());
 
             #endregion
 
-            // Using newly added MediatR from the App Layer to get list of all activities.
-            return await _mediator.Send(new List.Query());
+            // Using MediatR from the App Layer to get list of all activities.
+            // Using newly added property from BaseApi.
+            return await Mediator.Send(new List.Query());
         }
 
         /// <summary>
         /// Allow user to select an individual activity.
         /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id:guid}")] // equivalence: activity/id except THIS particular endpoint has a route constraint ("id:guid") to decide if the value passed in is acceptable.
         public async Task<ActionResult<Activity>> GetActivity(Guid id)
         {
             #region Old DI Code
+
+            // The original code in this region has been moved to the Application Layer.
 
             // Return activity based on id passed in (selected)
             //return await _db.Activities.FindAsync(id);
@@ -70,7 +80,34 @@ namespace ProjectReactivities_API.Controllers
 
             // Return activity based on id passed in (selected)
             // Using newly added MediatR
-            return Ok(); // this is temporary until a handler is made for this method.
+            return await Mediator.Send(new Details.Query { Id = id });
+        }
+
+        /// <summary>
+        /// Allow user to create an activity.
+        /// </summary>
+        /// <param name="activity"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> CreateActivity(Activity activity)
+        {
+            return Ok(await Mediator.Send(new Create.Command { Activity = activity }));
+        }
+
+        /// <summary>
+        /// Allow user to update an activity.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="activity"></param>
+        /// <returns></returns>
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> EditActivity(Guid id, Activity activity)
+        {
+            // Add the guid id to the activity object as it may not come with the body.
+            activity.Id = id;
+
+            // Pass it off to the handler
+            return Ok(await Mediator.Send(new Edit.Command { Activity = activity }));
         }
     }
 }

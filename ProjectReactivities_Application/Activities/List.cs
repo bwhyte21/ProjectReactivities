@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectReactivities_DataAccess.Data;
 using ProjectReactivities_Domain;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace ProjectReactivities_Application.Activities
 {
@@ -45,7 +42,7 @@ namespace ProjectReactivities_Application.Activities
             /// <returns></returns>
             public async Task<List<Activity>> Handle(Query request, CancellationToken cancellationToken)
             {
-                return await _db.Activities.ToListAsync(cancellationToken: cancellationToken);
+                return await _db.Activities.ToListAsync(cancellationToken);
             }
         }
     }
