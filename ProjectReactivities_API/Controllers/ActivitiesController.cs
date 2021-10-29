@@ -3,6 +3,7 @@ using ProjectReactivities_Application.Activities;
 using ProjectReactivities_Domain;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ProjectReactivities_API.Controllers
@@ -109,7 +110,6 @@ namespace ProjectReactivities_API.Controllers
             // Pass it off to the handler
             return Ok(await Mediator.Send(new Edit.Command { Activity = activity }));
         }
-
 
         /// <summary>
         /// Allow user to delete an activity.
