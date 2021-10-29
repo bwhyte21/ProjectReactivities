@@ -1,9 +1,13 @@
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ProjectReactivities_API.Extensions;
+using ProjectReactivities_Application.Activities;
+using ProjectReactivities_Application.Core;
 using ProjectReactivities_DataAccess.Data;
 
 namespace ProjectReactivities_API
@@ -12,6 +16,7 @@ namespace ProjectReactivities_API
     {
         // Remodeling configuration member to a private one.
         private readonly IConfiguration _config;
+        private readonly string _corsPolicy = "CorsPolicy";
 
         public Startup(IConfiguration config)
         {
@@ -21,15 +26,15 @@ namespace ProjectReactivities_API
         // This method gets called by the runtime. Use this method to add services to the container. (Dependency Injection container)
         public void ConfigureServices(IServiceCollection services)
         {
-            #region DbContext Service
-
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(_config.GetConnectionString("DefaultConnection")));
-
-            #endregion
-
             #region Controllers Service
 
             services.AddControllers();
+
+            #endregion
+
+            #region Other Services
+
+            services.AddApplicationServices(_config, _corsPolicy);
 
             #endregion
         }
@@ -39,16 +44,7 @@ namespace ProjectReactivities_API
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             // All ()'s here are middlewares.
-            if (env.IsDevelopment()) { app.UseDeveloperExceptionPage(); }
-
-            app.UseHttpsRedirection();
-
-            // Routing Middleware responsible for routing to the endpoints (below)
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.AddApplicationMiddleware(env, _corsPolicy);
         }
     }
 }
