@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import './App.css';
 import axios from 'axios';
 import { Header, List } from 'semantic-ui-react';
 
@@ -10,8 +9,6 @@ function App() {
   // Use the useEffect hook to use Axios to make our API call.
   useEffect(() => {
     axios.get('https://localhost:5001/api/Activities').then((response: any) => {
-      // monitor response, remove later
-      console.log(response);
       // Set the response data to activities.
       setActivities(response.data);
     });

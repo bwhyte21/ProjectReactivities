@@ -1,14 +1,8 @@
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using ProjectReactivities_API.Extensions;
-using ProjectReactivities_Application.Activities;
-using ProjectReactivities_Application.Core;
-using ProjectReactivities_DataAccess.Data;
 
 namespace ProjectReactivities_API
 {
