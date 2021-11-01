@@ -1,8 +1,9 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import axios from 'axios';
-import { Container, List } from 'semantic-ui-react';
+import { Container } from 'semantic-ui-react';
 import { Activity } from '../models/activity';
 import NavBar from './NavBar';
+import ActivityDashboard from '../../features/activities/dashboard/ActivityDashboard';
 
 function App() {
   // Use the useState hook to help import Activities and set the response to 'activities'.
@@ -22,13 +23,8 @@ function App() {
     <Fragment>
       <NavBar />
       <Container style={{ marginTop: '6.97385rem' }}>
-        <List>
-          {activities.map((activity) => (
-            <List.Item key={activity.id}>
-              {activity.title} | {activity.venue}, {activity.city}
-            </List.Item>
-          ))}
-        </List>
+        {/* Pass in 'activities' state into the dashboard */}
+        <ActivityDashboard activities={activities} />
       </Container>
     </Fragment>
   );
