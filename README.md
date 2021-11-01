@@ -15,3 +15,7 @@
 * [ ] Uses SignalR to enable real time web communication for a chat feature
 * [ ] Published to both IIS and Linux
 * [ ] Has an ‘A’ rating for security from a well known security scanning site.
+
+## Currently
+* Basic UI added
+** ![BasicUIAdded](https://user-images.githubusercontent.com/4268536/139753903-b329c0f8-9755-4a6f-a878-f2cfb7b6a096.PNG)
