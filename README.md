@@ -17,5 +17,5 @@
 * [ ] Has an ‘A’ rating for security from a well known security scanning site.
 
 ## Currently
-* Basic UI added
-** ![BasicUIAdded](https://user-images.githubusercontent.com/4268536/139753903-b329c0f8-9755-4a6f-a878-f2cfb7b6a096.PNG)
+* Activity Details and Form added!
+** ![ActivityDetailsAdded](https://user-images.githubusercontent.com/4268536/139965362-f5ab107f-0b62-4140-8e60-f692fcf694ad.PNG)
