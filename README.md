@@ -18,4 +18,4 @@
 
 ## Currently
 * Activity Details and Form added!
-** ![ActivityDetailsAdded](https://user-images.githubusercontent.com/4268536/139965362-f5ab107f-0b62-4140-8e60-f692fcf694ad.PNG)
+** ![ActivityDetailsAdded](https://user-images.githubusercontent.com/4268536/139965422-204263ee-f91d-4516-840e-112cbe710443.PNG)
