@@ -7,11 +7,13 @@ import ActivityDashboard from '../../features/activities/dashboard/ActivityDashb
 
 function App() {
   // Use the useState hook to help import Activities and set the response to 'activities'.
-  // New: now the useState is a type of Activity[], which means the ": any" can be removed from activities.map(...) due to it now having Type Safety.
+  // Now the useState is a type of Activity[], which means the ": any" can be removed from activities.map(...) due to it now having Type Safety.
   const [activities, setActivities] = useState<Activity[]>([]);
+  // New: Adding " | undefined" to state that the incoming activity can be an activity OR undefined.
+  const [selectedActivity, setSelctedActivity] = useState<Activity | undefined>(undefined);
 
   // Use the useEffect hook to use Axios to make our API call.
-  // New: added Activity[] for TypeSafety for the response.
+  // Added Activity[] for TypeSafety for the response.
   useEffect(() => {
     axios.get<Activity[]>('https://localhost:5001/api/Activities').then((response) => {
       // Set the response data to activities.
@@ -19,12 +21,27 @@ function App() {
     });
   }, []);
 
+  function selectActivityHandler(id:string){
+      // New: As soon as an activity ("a") is matched with the incoming activity ("id"), select activity.
+      setSelctedActivity(activities.find(a => a.id === id));
+  }
+
+  function cancelSelectActivityHandler(){
+    // New: set selected activity to undefined.
+    setSelctedActivity(undefined);
+  }
+
   return (
     <Fragment>
       <NavBar />
       <Container style={{ marginTop: '6.97385rem' }}>
         {/* Pass in 'activities' state into the dashboard */}
-        <ActivityDashboard activities={activities} />
+        <ActivityDashboard 
+        activities={activities} 
+        selectedActivity = {selectedActivity}
+        selectActivity = {selectActivityHandler}
+        cancelSelectActivity = {cancelSelectActivityHandler}
+        />
       </Container>
     </Fragment>
   );
