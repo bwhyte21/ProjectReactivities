@@ -4,6 +4,7 @@ import { Container } from 'semantic-ui-react';
 import { Activity } from '../models/activity';
 import NavBar from './NavBar';
 import ActivityDashboard from '../../features/activities/dashboard/ActivityDashboard';
+import { v4 as uuid } from 'uuid';
 
 function App() {
   //#region Consts
@@ -15,7 +16,7 @@ function App() {
   const [selectedActivity, setSelctedActivity] = useState<Activity | undefined>(undefined);
   // New: Display the status of form whether creating or editing.
   const [editMode, setEditMode] = useState(false);
-  
+
   //#endregion
 
   // Use the useEffect hook to use Axios to make our API call.
@@ -29,16 +30,19 @@ function App() {
 
   //#region Functions
 
+  // Handle the selection of activitities via "View" button click.
   function selectActivityHandler(id: string) {
     // New: As soon as an activity ("a") is matched with the incoming activity ("id"), select activity.
     setSelctedActivity(activities.find((a) => a.id === id));
   }
 
+  // Handle the deselection of an activity via "Cancel" button click in the form.
   function cancelSelectActivityHandler() {
     // New: set selected activity to undefined.
     setSelctedActivity(undefined);
   }
 
+  // Handle the activity form being displayed when the user wishes to create/edit an activity.
   function formOpenHandler(id?: string) {
     // If "id" is populated, select activity, else cancel.
     id ? selectActivityHandler(id) : cancelSelectActivityHandler();
@@ -46,19 +50,28 @@ function App() {
     setEditMode(true);
   }
 
+  // Handle the activity form being hidden when the user wishes to cancel activity creation/edition.
   function formCloseHandler() {
     // If an activity is being created/edited and the user clicks "cancel", close the form.
     setEditMode(false);
   }
 
-  
-  function upsertActivityHandler(activity: Activity){
+  // Handle the create/edit functionality for a new or existing activity.
+  function upsertActivityHandler(activity: Activity) {
     // Check whether we are updating or creating an activity.  check ? updateAct : createAct.
-    activity.id ? setActivities([...activities.filter((x) => x.id !== activity.id), activity]) : setActivities([...activities, activity]); // "..." = spread operator.
+    activity.id
+      ? setActivities([...activities.filter((x) => x.id !== activity.id), activity])
+      : setActivities([...activities, { ...activity, id: uuid() }]); // "..." = spread operator.
     // Set edit mode to false.
     setEditMode(false);
     // Set selected activity to the one just created to display successful creatrion.
     setSelctedActivity(activity);
+  }
+
+  // Handle the deletion of an activity.
+  function deleteActivityHandler(id: string) {
+    // Delete the activity that matches the id selected.
+    setActivities([...activities.filter((x) => x.id !== id)]);
   }
 
   //#endregion
@@ -77,6 +90,7 @@ function App() {
           openForm={formOpenHandler}
           closeForm={formCloseHandler}
           upsertActivity={upsertActivityHandler}
+          deleteActivity={deleteActivityHandler}
         />
       </Container>
     </Fragment>
