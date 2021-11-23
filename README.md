@@ -23,3 +23,12 @@
 ![ActivityEditDetailsAdded](https://user-images.githubusercontent.com/4268536/143081025-a6705065-837b-4617-b203-44a9a8f889e1.PNG)
 * Create Activity feature added!
 ![ActivityCreateFeatureAdded](https://user-images.githubusercontent.com/4268536/143081022-8d5a540b-c60c-47a0-a972-a1ac451533af.png)
+* Pending Activity creation animation in button!
+![ActivityCreationPendingAnim](https://user-images.githubusercontent.com/4268536/143137804-bc43ad41-41be-4c17-a923-b67d703bad00.png)
+* New activity displayed!
+![NewActivityCreated](https://user-images.githubusercontent.com/4268536/143137809-d1be0624-b042-4f8e-9bce-d6d43d931bda.PNG)
+* Activity list updated!
+![ActivityListUpdated](https://user-images.githubusercontent.com/4268536/143137806-8e3528e9-97be-4e68-99ab-e12447a51865.png)
+* App Loading on first visit / page refresh
+![AppLoadingAnim](https://user-images.githubusercontent.com/4268536/143137808-fc9dbe4c-a170-463e-8c92-873843b59124.PNG)
+
