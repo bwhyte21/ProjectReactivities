@@ -3,7 +3,6 @@ using ProjectReactivities_Application.Activities;
 using ProjectReactivities_Domain;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace ProjectReactivities_API.Controllers

@@ -8,7 +8,7 @@ namespace ProjectReactivities_Domain
     public class Activity
     {
         // EF will recognize that this is our primary key, be that it IS titled "Id".
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } // Primary Key
         public string Title { get; set; }
         public DateTime Date { get; set; }
         public string Description { get; set; }
