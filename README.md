@@ -18,8 +18,8 @@
 
 ## Currently
 * Activity Delete button added!
-** ![ActivityDeleteBtnAdded](https://user-images.githubusercontent.com/4268536/143081024-f85b01db-46c7-4a27-bd66-6bb06ae00738.PNG)
+![ActivityDeleteBtnAdded](https://user-images.githubusercontent.com/4268536/143081024-f85b01db-46c7-4a27-bd66-6bb06ae00738.PNG)
 * Edit Activity feature added!
-** ![ActivityEditDetailsAdded](https://user-images.githubusercontent.com/4268536/143081025-a6705065-837b-4617-b203-44a9a8f889e1.PNG)
+![ActivityEditDetailsAdded](https://user-images.githubusercontent.com/4268536/143081025-a6705065-837b-4617-b203-44a9a8f889e1.PNG)
 * Create Activity feature added!
-** ![ActivityCreateFeatureAdded](https://user-images.githubusercontent.com/4268536/143081022-8d5a540b-c60c-47a0-a972-a1ac451533af.png)
+![ActivityCreateFeatureAdded](https://user-images.githubusercontent.com/4268536/143081022-8d5a540b-c60c-47a0-a972-a1ac451533af.png)
