@@ -1,10 +1,11 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import axios from 'axios';
 import { Container } from 'semantic-ui-react';
 import { Activity } from '../models/activity';
 import NavBar from './NavBar';
 import ActivityDashboard from '../../features/activities/dashboard/ActivityDashboard';
 import { v4 as uuid } from 'uuid';
+import agent from '../api/agent';
+import LoadingComponent from './LoadingComponent';
 
 function App() {
   //#region Consts
@@ -16,15 +17,28 @@ function App() {
   const [selectedActivity, setSelctedActivity] = useState<Activity | undefined>(undefined);
   // New: Display the status of form whether creating or editing.
   const [editMode, setEditMode] = useState(false);
+  // New: Display loading animation from semanticUI.
+  const [loading, setLoading] = useState(true);
+  // New: Display when an activity is being submitted to the API.
+  const [submitFlag, setSubmitFlag] = useState(false);
 
   //#endregion
 
   // Use the useEffect hook to use Axios to make our API call.
   // Added Activity[] for TypeSafety for the response.
+  // New: Using the newly added "agent" from the axios configuration in agent.ts
   useEffect(() => {
-    axios.get<Activity[]>('https://localhost:5001/api/Activities').then((response) => {
+    agent.Activities.list().then((response) => {
+      // New: Update the date property before setting the activity.
+      let activities: Activity[] = [];
+      response.forEach((activity) => {
+        activity.date = activity.date.split('T')[0]; // temp fix for date formatting.
+        activities.push(activity);
+      });
       // Set the response data to activities.
-      setActivities(response.data);
+      setActivities(activities);
+      // Kill loading anim once activities have "loaded".
+      setLoading(false);
     });
   }, []);
 
@@ -32,13 +46,13 @@ function App() {
 
   // Handle the selection of activitities via "View" button click.
   function selectActivityHandler(id: string) {
-    // New: As soon as an activity ("a") is matched with the incoming activity ("id"), select activity.
+    // As soon as an activity ("a") is matched with the incoming activity ("id"), select activity.
     setSelctedActivity(activities.find((a) => a.id === id));
   }
 
   // Handle the deselection of an activity via "Cancel" button click in the form.
   function cancelSelectActivityHandler() {
-    // New: set selected activity to undefined.
+    // Set selected activity to undefined.
     setSelctedActivity(undefined);
   }
 
@@ -58,23 +72,54 @@ function App() {
 
   // Handle the create/edit functionality for a new or existing activity.
   function upsertActivityHandler(activity: Activity) {
-    // Check whether we are updating or creating an activity.  check ? updateAct : createAct.
-    activity.id
-      ? setActivities([...activities.filter((x) => x.id !== activity.id), activity])
-      : setActivities([...activities, { ...activity, id: uuid() }]); // "..." = spread operator.
-    // Set edit mode to false.
-    setEditMode(false);
-    // Set selected activity to the one just created to display successful creatrion.
-    setSelctedActivity(activity);
+    // Set submit to true to trigger the loading indicator.
+    setSubmitFlag(true);
+    // Check whether we are updating or creating an activity.
+    if (activity.id) {
+      // If updating Activity.
+      agent.Activities.update(activity).then(() => {
+        // Update activity.
+        setActivities([...activities.filter((x) => x.id !== activity.id), activity]);
+        // Show updated activity.
+        setSelctedActivity(activity);
+        // Kill Edit mode.
+        setEditMode(false);
+        // Kill loading anim.
+        setSubmitFlag(false);
+      });
+    } else {
+      // If creating an Activity.
+      // Generate a GUID for the new activity.
+      activity.id = uuid();
+      agent.Activities.create(activity).then(() => {
+        // THEN create activity.
+        setActivities([...activities, activity]); // "..." = spread operator.
+        // Show created activity.
+        setSelctedActivity(activity);
+        // Kill Edit mode.
+        setEditMode(false);
+        // Kill loading anim.
+        setSubmitFlag(false);
+      });
+    }
   }
 
   // Handle the deletion of an activity.
   function deleteActivityHandler(id: string) {
+    // Set submit to true to trigger the loading indicator.
+    setSubmitFlag(true);
     // Delete the activity that matches the id selected.
-    setActivities([...activities.filter((x) => x.id !== id)]);
+    agent.Activities.delete(id).then(()=>{
+        setActivities([...activities.filter((x) => x.id !== id)]);
+        // We use the submit flag, but aren't actually submitting because...delete.
+        setSubmitFlag(false);
+    })
   }
 
   //#endregion
+
+  // Check to see if the app is loading before displaying the content.
+  if (loading) return <LoadingComponent content="Loading Reactivities..." />;
 
   return (
     <Fragment>
@@ -91,6 +136,7 @@ function App() {
           closeForm={formCloseHandler}
           upsertActivity={upsertActivityHandler}
           deleteActivity={deleteActivityHandler}
+          submitFlag={submitFlag}
         />
       </Container>
     </Fragment>

@@ -6,9 +6,10 @@ interface Props {
   activity: Activity | undefined;
   closeForm: () => void;
   upsertActivity: (activity: Activity) => void;
+  submitFlag: boolean;
 }
 
-export default function ActivityForm({ activity: selectedActivity, closeForm, upsertActivity }: Props) {
+export default function ActivityForm({ activity: selectedActivity, closeForm, upsertActivity, submitFlag}: Props) {
   //#region Consts
   // This will either be the selected activity or the props in an activity object.
   const initialState = selectedActivity ?? {
@@ -49,10 +50,10 @@ export default function ActivityForm({ activity: selectedActivity, closeForm, up
         <Form.Input placeholder="Title" value={activity.title} name="title" onChange={inputChangeHandler} />
         <Form.TextArea placeholder="Description" value={activity.description} name="description" onChange={inputChangeHandler} />
         <Form.Input placeholder="Category" value={activity.category} name="category" onChange={inputChangeHandler} />
-        <Form.Input placeholder="Date" value={activity.date} name="date" onChange={inputChangeHandler} />
+        <Form.Input type="date" placeholder="Date" value={activity.date} name="date" onChange={inputChangeHandler} />
         <Form.Input placeholder="City" value={activity.city} name="city" onChange={inputChangeHandler} />
         <Form.Input placeholder="Venue" value={activity.venue} name="venue" onChange={inputChangeHandler} />
-        <Button floated="right" positive type="submit" content="Submit" />
+        <Button loading={submitFlag} floated="right" positive type="submit" content="Submit" />
         <Button onClick={closeForm} floated="right" type="button" content="Cancel" />
       </Form>
     </Segment>

@@ -15,6 +15,7 @@ interface Props {
   closeForm: () => void;
   upsertActivity: (activity: Activity) => void;
   deleteActivity: (id:string) => void;
+  submitFlag: boolean;
 }
 
 // Destructuring the properties that we're passing into the dashboard rather than using "props: Props".
@@ -28,16 +29,13 @@ export default function ActivityDashboard({
   openForm,
   closeForm,
   upsertActivity,
-  deleteActivity
+  deleteActivity,
+  submitFlag,
 }: Props) {
   return (
     <Grid>
       <Grid.Column width="10">
-        <ActivityList 
-        activities={activities} 
-        selectActivity={selectActivity} 
-        deleteActivity={deleteActivity}
-        />
+        <ActivityList activities={activities} selectActivity={selectActivity} deleteActivity={deleteActivity} submitFlag = {submitFlag} />
       </Grid.Column>
       <Grid.Column width="6">
         {/* Check if activities exist before trying to access them. */}
@@ -46,7 +44,7 @@ export default function ActivityDashboard({
           <ActivityDetails activity={selectedActivity} cancelSelectActivity={cancelSelectActivity} openForm={openForm} />
         )}
         {/* We only want the current activity form component to show unless edit mode is active. */}
-        {editMode && <ActivityForm closeForm={closeForm} activity={selectedActivity} upsertActivity={upsertActivity}/>}
+        {editMode && <ActivityForm closeForm={closeForm} activity={selectedActivity} upsertActivity={upsertActivity} submitFlag={submitFlag} />}
       </Grid.Column>
     </Grid>
   );

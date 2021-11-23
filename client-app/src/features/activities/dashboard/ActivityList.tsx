@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { SyntheticEvent, useState } from 'react';
 import { Button, Item, Label, Segment } from 'semantic-ui-react';
 import { Activity } from '../../../app/models/activity';
 
@@ -6,10 +6,20 @@ interface Props {
   activities: Activity[];
   selectActivity: (id: string) => void;
   deleteActivity: (id: string) => void;
+  submitFlag: boolean;
 }
 
 // Styling out the Activity List in the View.Items SemanticUI format.
-export default function ActivityList({ activities, selectActivity, deleteActivity }: Props) {
+export default function ActivityList({ activities, selectActivity, deleteActivity, submitFlag }: Props) {
+  // Grab the id for the activty that is to be deleted.
+  const [target, setTarget] = useState('');
+  // Delete click event handler.
+  function deleteActivityHandler(e: SyntheticEvent<HTMLButtonElement>, id: string) {
+    // Get the target's name.
+    setTarget(e.currentTarget.name);
+    // Delete it.
+    deleteActivity(id);
+  }
   return (
     <Segment>
       <Item.Group divided>
@@ -26,7 +36,13 @@ export default function ActivityList({ activities, selectActivity, deleteActivit
               </Item.Description>
               <Item.Extra>
                 <Button onClick={() => selectActivity(activity.id)} floated="right" content="View" color="blue"></Button>
-                <Button onClick={() => deleteActivity(activity.id)} floated="right" content="Delete" color="red"></Button>
+                <Button
+                  name={activity.id}
+                  loading={submitFlag && target === activity.id}
+                  onClick={(e) => deleteActivityHandler(e, activity.id)}
+                  floated="right"
+                  content="Delete"
+                  color="red"></Button>
                 <Label basic content={activity.category} />
               </Item.Extra>
             </Item.Content>
