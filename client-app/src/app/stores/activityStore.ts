@@ -34,13 +34,16 @@ export default class ActivityStore {
   // It uses 'async' because it is returning a promise from 'agent'.
   loadActivities = async () => {
     // Sync code is done outside of a trycatch block
-    this.loadingInitial = true;
+    //this.loadingInitial = true;
+    this.setLoadingInitial(true);
 
     // Async code is done inside a trycatch block.
     try {
       // Activities from API.
       // This will not execute until this list is populated.
       const activities = await agent.Activities.list();
+      // RunInAction creates a temp action that is immediately invoked. Helps clear that flicker on load and that MobX strict warning.
+      //runInAction(() => {
       // Populate the observable directly.
       activities.forEach((activity) => {
         // Temp fix for date formatting.
@@ -49,11 +52,22 @@ export default class ActivityStore {
         this.activities.push(activity);
       });
       // Set loading initial flag.
-      this.loadingInitial = false;
+      //this.loadingInitial = false;
+      this.setLoadingInitial(false);
+      //});
     } catch (error) {
       console.log(error);
-      this.loadingInitial = false;
+      // This will break if not inside an action.
+      // runInAction(() => {
+      //   this.loadingInitial = false;
+      // });
+      this.setLoadingInitial(false);
     }
+  };
+
+  // Create a loading action to remove the use of runInAction()
+  setLoadingInitial = (state: boolean) => {
+    this.loadingInitial = state;
   };
 
   // #endregion
