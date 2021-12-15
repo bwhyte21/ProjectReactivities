@@ -5,36 +5,22 @@ import agent from '../api/agent';
 import { Activity } from '../models/activity';
 
 export default class ActivityStore {
-  //title = 'Hello from MobX!';
-
   // Activity properties ported from App.tsx
   activities: Activity[] = [];
-  selectedActivity: Activity | null = null; // Can be activity or it can be null.
+  selectedActivity: Activity | undefined = undefined;
   editMode = false;
   loading = false;
   loadingInitial = false;
 
   constructor() {
-    //makeObservable(this, {
-    //  title: observable,
-    // action.bound binds the 'setTitle' to the ActivityStore class. The alternative is to use the arrow function ( () => ) so '.bound' isn't needed.
-    //  setTitle: action.bound,
-    //  setTitle: action,
-    //});
     // 'makeAutoObservable' essentially handles all the setting of properties so developers don't have to... THIS IS WAY TOO EASY! WTH?!
     makeAutoObservable(this);
   }
 
   // region# Actions
-  // A temp function to showcase binding to ActivityStore.
-  // setTitle = () => {
-  //   this.title = this.title + '!';
-  // };
-
   // It uses 'async' because it is returning a promise from 'agent'.
   loadActivities = async () => {
     // Sync code is done outside of a trycatch block
-    //this.loadingInitial = true;
     this.setLoadingInitial(true);
 
     // Async code is done inside a trycatch block.
@@ -42,8 +28,6 @@ export default class ActivityStore {
       // Activities from API.
       // This will not execute until this list is populated.
       const activities = await agent.Activities.list();
-      // RunInAction creates a temp action that is immediately invoked. Helps clear that flicker on load and that MobX strict warning.
-      //runInAction(() => {
       // Populate the observable directly.
       activities.forEach((activity) => {
         // Temp fix for date formatting.
@@ -52,22 +36,40 @@ export default class ActivityStore {
         this.activities.push(activity);
       });
       // Set loading initial flag.
-      //this.loadingInitial = false;
       this.setLoadingInitial(false);
-      //});
     } catch (error) {
       console.log(error);
-      // This will break if not inside an action.
-      // runInAction(() => {
-      //   this.loadingInitial = false;
-      // });
+
+      // Set loading initial to false.
       this.setLoadingInitial(false);
     }
   };
 
-  // Create a loading action to remove the use of runInAction()
+  // Create a loading action to remove the use of runInAction().
   setLoadingInitial = (state: boolean) => {
     this.loadingInitial = state;
+  };
+
+  // Select Activity action.
+  selectActivity = (id: string) => {
+    this.selectedActivity = this.activities.find((a) => a.id === id);
+  };
+
+  // Cancel Selected Activity action.
+  cancelSelectedActivity = () => {
+    this.selectedActivity = undefined;
+  };
+
+  // Open-a-form action. For activity creation or editing.
+  openForm = (id?: string) => {
+    // If user is editing an activity, select the activity, else cancel current selected activity if they decide to create a new one.
+    id ? this.selectActivity(id) : this.cancelSelectedActivity();
+    this.editMode = true;
+  };
+
+  // Close-a-form action.
+  closeForm = () => {
+    this.editMode = false;
   };
 
   // #endregion

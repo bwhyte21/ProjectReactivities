@@ -1,16 +1,16 @@
 import React, { SyntheticEvent, useState } from 'react';
 import { Button, Item, Label, Segment } from 'semantic-ui-react';
 import { Activity } from '../../../app/models/activity';
+import { useStore } from '../../../app/stores/store';
 
 interface Props {
   activities: Activity[];
-  selectActivity: (id: string) => void;
   deleteActivity: (id: string) => void;
   submitFlag: boolean;
 }
 
 // Styling out the Activity List in the View.Items SemanticUI format.
-export default function ActivityList({ activities, selectActivity, deleteActivity, submitFlag }: Props) {
+export default function ActivityList({ activities, deleteActivity, submitFlag }: Props) {
   // Grab the id for the activty that is to be deleted.
   const [target, setTarget] = useState('');
   // Delete click event handler.
@@ -20,6 +20,9 @@ export default function ActivityList({ activities, selectActivity, deleteActivit
     // Delete it.
     deleteActivity(id);
   }
+  // Use the newly created activityStore to replace the previous handler functionality.
+  const { activityStore } = useStore();
+
   return (
     <Segment>
       <Item.Group divided>
@@ -35,7 +38,7 @@ export default function ActivityList({ activities, selectActivity, deleteActivit
                 </div>
               </Item.Description>
               <Item.Extra>
-                <Button onClick={() => selectActivity(activity.id)} floated="right" content="View" color="blue"></Button>
+                <Button onClick={() => activityStore.selectActivity(activity.id)} floated="right" content="View" color="blue"></Button>
                 <Button
                   name={activity.id}
                   loading={submitFlag && target === activity.id}

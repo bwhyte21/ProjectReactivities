@@ -1,51 +1,38 @@
+import { observer } from 'mobx-react-lite';
 import React from 'react';
 import { Grid } from 'semantic-ui-react';
 import { Activity } from '../../../app/models/activity';
+import { useStore } from '../../../app/stores/store';
 import ActivityDetails from '../details/ActivityDetails';
 import ActivityForm from '../form/ActivityForm';
 import ActivityList from './ActivityList';
 
 interface Props {
   activities: Activity[];
-  selectedActivity: Activity | undefined; // Match the type of props being passed in.
-  selectActivity: (id: string) => void; // Since this function returns nothing, just add "=> void".
-  cancelSelectActivity: () => void; // Takes no params, returns void.
-  editMode: boolean;
-  openForm: (id: string) => void;
-  closeForm: () => void;
   upsertActivity: (activity: Activity) => void;
-  deleteActivity: (id:string) => void;
+  deleteActivity: (id: string) => void;
   submitFlag: boolean;
 }
 
 // Destructuring the properties that we're passing into the dashboard rather than using "props: Props".
 // TL;DR: {activities}: Prop > props: Props.
-export default function ActivityDashboard({
-  activities,
-  selectedActivity,
-  selectActivity,
-  cancelSelectActivity,
-  editMode,
-  openForm,
-  closeForm,
-  upsertActivity,
-  deleteActivity,
-  submitFlag,
-}: Props) {
+export default observer(function ActivityDashboard({ activities, upsertActivity, deleteActivity, submitFlag }: Props) {
+  // Use the newly created activityStore to replace the previous handler functionality.
+  const { activityStore } = useStore();
+  // Destructure the needed properties from activityStore to be used.
+  const { selectedActivity, editMode } = activityStore;
   return (
     <Grid>
       <Grid.Column width="10">
-        <ActivityList activities={activities} selectActivity={selectActivity} deleteActivity={deleteActivity} submitFlag = {submitFlag} />
+        <ActivityList activities={activities} deleteActivity={deleteActivity} submitFlag={submitFlag} />
       </Grid.Column>
       <Grid.Column width="6">
         {/* Check if activities exist before trying to access them. */}
         {/* Check if any activities have been selected before trying to access them. */}
-        {selectedActivity && !editMode && (
-          <ActivityDetails activity={selectedActivity} cancelSelectActivity={cancelSelectActivity} openForm={openForm} />
-        )}
+        {selectedActivity && !editMode && <ActivityDetails />}
         {/* We only want the current activity form component to show unless edit mode is active. */}
-        {editMode && <ActivityForm closeForm={closeForm} activity={selectedActivity} upsertActivity={upsertActivity} submitFlag={submitFlag} />}
+        {editMode && <ActivityForm upsertActivity={upsertActivity} submitFlag={submitFlag} />}
       </Grid.Column>
     </Grid>
   );
-}
+});
