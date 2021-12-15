@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Button, Container } from 'semantic-ui-react';
+import { Container } from 'semantic-ui-react';
 import { Activity } from '../models/activity';
 import NavBar from './NavBar';
 import ActivityDashboard from '../../features/activities/dashboard/ActivityDashboard';
@@ -17,34 +17,21 @@ function App() {
   // Use the useState hook to help import Activities and set the response to 'activities'.
   // Now the useState is a type of Activity[], which means the ": any" can be removed from activities.map(...) due to it now having Type Safety.
   const [activities, setActivities] = useState<Activity[]>([]);
-  // New: Adding " | undefined" to state that the incoming activity can be an activity OR undefined.
+  // Adding " | undefined" to state that the incoming activity can be an activity OR undefined.
   const [selectedActivity, setSelctedActivity] = useState<Activity | undefined>(undefined);
-  // New: Display the status of form whether creating or editing.
+  // Display the status of form whether creating or editing.
   const [editMode, setEditMode] = useState(false);
-  // New: Display loading animation from semanticUI.
-  const [loading, setLoading] = useState(true);
-  // New: Display when an activity is being submitted to the API.
+  // Display when an activity is being submitted to the API.
   const [submitFlag, setSubmitFlag] = useState(false);
 
   //#endregion
 
   // Use the useEffect hook to use Axios to make our API call.
   // Added Activity[] for TypeSafety for the response.
-  // New: Using the newly added "agent" from the axios configuration in agent.ts
+  // Using the newly added "agent" from the axios configuration in agent.ts
   useEffect(() => {
-    agent.Activities.list().then((response) => {
-      // New: Update the date property before setting the activity.
-      let activities: Activity[] = [];
-      response.forEach((activity) => {
-        activity.date = activity.date.split('T')[0]; // temp fix for date formatting.
-        activities.push(activity);
-      });
-      // Set the response data to activities.
-      setActivities(activities);
-      // Kill loading anim once activities have "loaded".
-      setLoading(false);
-    });
-  }, []);
+    activityStore.loadActivities();
+  }, [activityStore]);
 
   //#region Functions
 
@@ -123,17 +110,19 @@ function App() {
   //#endregion
 
   // Check to see if the app is loading before displaying the content.
-  if (loading) return <LoadingComponent content="Loading Reactivities..." />;
+  if (activityStore.loadingInitial) return <LoadingComponent content="Loading Reactivities..." />;
 
   return (
     <Fragment>
       <NavBar openForm={formOpenHandler} />
       <Container style={{ marginTop: '6.97385rem' }}>
-        <h2>{activityStore.title}</h2>
-        <Button content="Add exclamation!" positive onClick={activityStore.setTitle} />
+        {/* Temp code to demo MobX at first glance */}
+        {/* <h2>{activityStore.title}</h2>
+        <Button content="Add exclamation!" positive onClick={activityStore.setTitle} /> */}
+
         {/* Pass in 'activities' state into the dashboard */}
         <ActivityDashboard
-          activities={activities}
+          activities={activityStore.activities}
           selectedActivity={selectedActivity}
           selectActivity={selectActivityHandler}
           cancelSelectActivity={cancelSelectActivityHandler}
