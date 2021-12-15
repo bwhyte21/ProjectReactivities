@@ -6,9 +6,12 @@ import ActivityDashboard from '../../features/activities/dashboard/ActivityDashb
 import { v4 as uuid } from 'uuid';
 import agent from '../api/agent';
 import LoadingComponent from './LoadingComponent';
+import { useStore } from '../stores/store';
 
 function App() {
   //#region Consts
+  // New: Temp location for ActivityStore react hook.
+  const { activityStore } = useStore();
 
   // Use the useState hook to help import Activities and set the response to 'activities'.
   // Now the useState is a type of Activity[], which means the ": any" can be removed from activities.map(...) due to it now having Type Safety.
@@ -109,11 +112,11 @@ function App() {
     // Set submit to true to trigger the loading indicator.
     setSubmitFlag(true);
     // Delete the activity that matches the id selected.
-    agent.Activities.delete(id).then(()=>{
-        setActivities([...activities.filter((x) => x.id !== id)]);
-        // We use the submit flag, but aren't actually submitting because...delete.
-        setSubmitFlag(false);
-    })
+    agent.Activities.delete(id).then(() => {
+      setActivities([...activities.filter((x) => x.id !== id)]);
+      // We use the submit flag, but aren't actually submitting because...delete.
+      setSubmitFlag(false);
+    });
   }
 
   //#endregion
@@ -125,6 +128,7 @@ function App() {
     <Fragment>
       <NavBar openForm={formOpenHandler} />
       <Container style={{ marginTop: '6.97385rem' }}>
+          <h2>{activityStore.title}</h2>
         {/* Pass in 'activities' state into the dashboard */}
         <ActivityDashboard
           activities={activities}
