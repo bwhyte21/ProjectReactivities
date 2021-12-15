@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Container } from 'semantic-ui-react';
+import { Button, Container } from 'semantic-ui-react';
 import { Activity } from '../models/activity';
 import NavBar from './NavBar';
 import ActivityDashboard from '../../features/activities/dashboard/ActivityDashboard';
@@ -7,6 +7,7 @@ import { v4 as uuid } from 'uuid';
 import agent from '../api/agent';
 import LoadingComponent from './LoadingComponent';
 import { useStore } from '../stores/store';
+import { observer } from 'mobx-react-lite';
 
 function App() {
   //#region Consts
@@ -128,7 +129,8 @@ function App() {
     <Fragment>
       <NavBar openForm={formOpenHandler} />
       <Container style={{ marginTop: '6.97385rem' }}>
-          <h2>{activityStore.title}</h2>
+        <h2>{activityStore.title}</h2>
+        <Button content="Add exclamation!" positive onClick={activityStore.setTitle} />
         {/* Pass in 'activities' state into the dashboard */}
         <ActivityDashboard
           activities={activities}
@@ -147,4 +149,4 @@ function App() {
   );
 }
 
-export default App;
+export default observer(App); // 'observer' allows 'App' to be an observer for the Activity Store.

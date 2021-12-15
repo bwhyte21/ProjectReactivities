@@ -11,7 +11,7 @@ interface Props {
 
 export default function ActivityForm({ activity: selectedActivity, closeForm, upsertActivity, submitFlag}: Props) {
   //#region Consts
-  // This will either be the selected activity or the props in an activity object.
+  // This will either be the selected activity or (??) the props in an activity object.
   const initialState = selectedActivity ?? {
     id: '',
     title: '',
