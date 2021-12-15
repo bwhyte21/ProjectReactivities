@@ -3,7 +3,6 @@ import { Container } from 'semantic-ui-react';
 import { Activity } from '../models/activity';
 import NavBar from './NavBar';
 import ActivityDashboard from '../../features/activities/dashboard/ActivityDashboard';
-import { v4 as uuid } from 'uuid';
 import agent from '../api/agent';
 import LoadingComponent from './LoadingComponent';
 import { useStore } from '../stores/store';
@@ -29,40 +28,6 @@ function App() {
 
   //#region Functions
 
-  // Handle the create/edit functionality for a new or existing activity.
-  function upsertActivityHandler(activity: Activity) {
-    // Set submit to true to trigger the loading indicator.
-    setSubmitFlag(true);
-    // Check whether we are updating or creating an activity.
-    if (activity.id) {
-      // If updating Activity.
-      agent.Activities.update(activity).then(() => {
-        // Update activity.
-        setActivities([...activities.filter((x) => x.id !== activity.id), activity]);
-        // Show updated activity.
-        activityStore.selectActivity(activity.id)
-        // Kill Edit mode.
-        activityStore.editMode = false;
-        // Kill loading anim.
-        setSubmitFlag(false);
-      });
-    } else {
-      // If creating an Activity.
-      // Generate a GUID for the new activity.
-      activity.id = uuid();
-      agent.Activities.create(activity).then(() => {
-        // THEN create activity.
-        setActivities([...activities, activity]); // "..." = spread operator.
-        // Show created activity.
-        activityStore.selectActivity(activity.id);
-        // Kill Edit mode.
-        activityStore.editMode = false;
-        // Kill loading anim.
-        setSubmitFlag(false);
-      });
-    }
-  }
-
   // Handle the deletion of an activity.
   function deleteActivityHandler(id: string) {
     // Set submit to true to trigger the loading indicator.
@@ -87,7 +52,6 @@ function App() {
         {/* Pass in 'activities' state into the dashboard */}
         <ActivityDashboard
           activities={activityStore.activities}
-          upsertActivity={upsertActivityHandler}
           deleteActivity={deleteActivityHandler}
           submitFlag={submitFlag}
         />

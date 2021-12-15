@@ -1,8 +1,7 @@
-// Uncomment (below) to use makeObservable.
-// import { action, makeAutoObservable, makeObservable, observable } from 'mobx';
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, runInAction } from 'mobx';
 import agent from '../api/agent';
 import { Activity } from '../models/activity';
+import { v4 as uuid } from 'uuid';
 
 export default class ActivityStore {
   // Activity properties ported from App.tsx
@@ -70,6 +69,50 @@ export default class ActivityStore {
   // Close-a-form action.
   closeForm = () => {
     this.editMode = false;
+  };
+
+  // Create Activity action.
+  createActivity = async (activity: Activity) => {
+    this.loading = true;
+    activity.id = uuid();
+    try {
+      // Create a user id using uuid for the activity.
+      await agent.Activities.create(activity);
+      // Update activity array inside our store then select newly created activity.
+      runInAction(() => {
+        this.activities.push(activity);
+        this.selectedActivity = activity;
+        this.editMode = false;
+        this.loading = false;
+      });
+    } catch (error) {
+      console.log(error);
+      runInAction(() => {
+        this.loading = false;
+      });
+    }
+  };
+
+  // Update Activity action.
+  updateActivity = async (activity: Activity) => {
+    this.loading = true;
+    try {
+      // Edit selected activity.
+      await agent.Activities.update(activity);
+      // Update activity array inside our store then select newly created activity.
+      runInAction(() => {
+        // Find the activity, update it, then create a new array to push it to using the spread operator.
+        this.activities = [...this.activities.filter(a => a.id !== activity.id), activity];
+        this.selectedActivity = activity;
+        this.editMode = false;
+        this.loading = false;
+      });
+    } catch (error) {
+      console.log(error);
+      runInAction(() => {
+        this.loading = false;
+      });
+    }
   };
 
   // #endregion
