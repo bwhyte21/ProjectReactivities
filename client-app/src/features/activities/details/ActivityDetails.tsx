@@ -9,7 +9,7 @@ export default function ActivityDetails() {
   const { selectedActivity: activity, openForm, cancelSelectedActivity } = activityStore;
 
   // If we don't have an activity, just return.
-  if (!activity) return <LoadingComponent content={'Loading Reactivities...'} />;
+  if (!activity) return <LoadingComponent content={''} />;
 
   return (
     <Card fluid>
