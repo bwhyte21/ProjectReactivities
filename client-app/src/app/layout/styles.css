@@ -6,3 +6,7 @@ body {
 .ui.inverted.top.fixed.menu {
   background-image: linear-gradient(135deg, rgb(3, 10, 20) 5%, rgb(3, 54, 73) 69%, rgb(3, 101, 100) 89%) !important;
 }
+
+#navLogo {
+  margin-right: 0.625rem;
+}
