@@ -5,22 +5,28 @@ import { v4 as uuid } from 'uuid';
 
 export default class ActivityStore {
   // Activity properties ported from App.tsx
-  activities: Activity[] = [];
+  // New map object to contain Activities.
+  activityRegistry = new Map<string, Activity>();
   selectedActivity: Activity | undefined = undefined;
   editMode = false;
   loading = false;
-  loadingInitial = false;
+  loadingInitial = true;
 
   constructor() {
     // 'makeAutoObservable' essentially handles all the setting of properties so developers don't have to... THIS IS WAY TOO EASY! WTH?!
     makeAutoObservable(this);
   }
 
+  // Get and sort the activities by date using a computed property.
+  get activitiesByDate() {
+    return Array.from(this.activityRegistry.values()).sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
+  }
+
   // #region Actions
   // It uses 'async' because it is returning a promise from 'agent'.
   loadActivities = async () => {
     // Sync code is done outside of a trycatch block
-    this.setLoadingInitial(true);
+    //this.setLoadingInitial(true);
 
     // Async code is done inside a trycatch block.
     try {
@@ -32,7 +38,8 @@ export default class ActivityStore {
         // Temp fix for date formatting.
         activity.date = activity.date.split('T')[0];
         // Mutate state via MobX. MobX does not use immutable structures, whereas, Redux does.
-        this.activities.push(activity);
+        // "map".set(key, value)
+        this.activityRegistry.set(activity.id, activity);
       });
       // Set loading initial flag.
       this.setLoadingInitial(false);
@@ -51,7 +58,8 @@ export default class ActivityStore {
 
   // Select Activity action.
   selectActivity = (id: string) => {
-    this.selectedActivity = this.activities.find((a) => a.id === id);
+    // Returns the activity that matches the "id".
+    this.selectedActivity = this.activityRegistry.get(id);
   };
 
   // Cancel Selected Activity action.
@@ -80,7 +88,8 @@ export default class ActivityStore {
       await agent.Activities.create(activity);
       // Update activity array inside our store then select newly created activity.
       runInAction(() => {
-        this.activities.push(activity);
+        // Set the id in the registry.
+        this.activityRegistry.set(activity.id, activity);
         this.selectedActivity = activity;
         this.editMode = false;
         this.loading = false;
@@ -101,8 +110,9 @@ export default class ActivityStore {
       await agent.Activities.update(activity);
       // Update activity array inside our store then select newly created activity.
       runInAction(() => {
-        // Find the activity, update it, then create a new array to push it to using the spread operator.
-        this.activities = [...this.activities.filter((a) => a.id !== activity.id), activity];
+        // Find the activity, then update it.
+        // Set the id in the registry.
+        this.activityRegistry.set(activity.id, activity);
         this.selectedActivity = activity;
         this.editMode = false;
         this.loading = false;
@@ -123,7 +133,8 @@ export default class ActivityStore {
       await agent.Activities.delete(id);
       // Remove the activity from the array.
       runInAction(() => {
-        this.activities = [...this.activities.filter((a) => a.id !== id)];
+        // Delete from registry.
+        this.activityRegistry.delete(id);
         if (this.selectedActivity?.id === id) {
           this.cancelSelectedActivity();
         }
