@@ -1,16 +1,14 @@
+import { observer } from 'mobx-react-lite';
 import React, { SyntheticEvent, useState } from 'react';
 import { Button, Item, Label, Segment } from 'semantic-ui-react';
-import { Activity } from '../../../app/models/activity';
 import { useStore } from '../../../app/stores/store';
 
-interface Props {
-  activities: Activity[];
-  deleteActivity: (id: string) => void;
-  submitFlag: boolean;
-}
-
 // Styling out the Activity List in the View.Items SemanticUI format.
-export default function ActivityList({ activities, deleteActivity, submitFlag }: Props) {
+export default observer(function ActivityList() {
+  // Use the newly created activityStore to replace the previous handler functionality.
+  const { activityStore } = useStore();
+  const { deleteActivity, activities, loading } = activityStore;
+
   // Grab the id for the activty that is to be deleted.
   const [target, setTarget] = useState('');
   // Delete click event handler.
@@ -20,8 +18,6 @@ export default function ActivityList({ activities, deleteActivity, submitFlag }:
     // Delete it.
     deleteActivity(id);
   }
-  // Use the newly created activityStore to replace the previous handler functionality.
-  const { activityStore } = useStore();
 
   return (
     <Segment>
@@ -41,7 +37,7 @@ export default function ActivityList({ activities, deleteActivity, submitFlag }:
                 <Button onClick={() => activityStore.selectActivity(activity.id)} floated="right" content="View" color="blue"></Button>
                 <Button
                   name={activity.id}
-                  loading={submitFlag && target === activity.id}
+                  loading={loading && target === activity.id}
                   onClick={(e) => deleteActivityHandler(e, activity.id)}
                   floated="right"
                   content="Delete"
@@ -54,4 +50,4 @@ export default function ActivityList({ activities, deleteActivity, submitFlag }:
       </Item.Group>
     </Segment>
   );
-}
+});

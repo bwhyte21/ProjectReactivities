@@ -16,7 +16,7 @@ export default class ActivityStore {
     makeAutoObservable(this);
   }
 
-  // region# Actions
+  // #region Actions
   // It uses 'async' because it is returning a promise from 'agent'.
   loadActivities = async () => {
     // Sync code is done outside of a trycatch block
@@ -102,9 +102,31 @@ export default class ActivityStore {
       // Update activity array inside our store then select newly created activity.
       runInAction(() => {
         // Find the activity, update it, then create a new array to push it to using the spread operator.
-        this.activities = [...this.activities.filter(a => a.id !== activity.id), activity];
+        this.activities = [...this.activities.filter((a) => a.id !== activity.id), activity];
         this.selectedActivity = activity;
         this.editMode = false;
+        this.loading = false;
+      });
+    } catch (error) {
+      console.log(error);
+      runInAction(() => {
+        this.loading = false;
+      });
+    }
+  };
+
+  // Delete Activity action.
+  deleteActivity = async (id: string) => {
+    this.loading = true;
+    try {
+      // Delete selected activity.
+      await agent.Activities.delete(id);
+      // Remove the activity from the array.
+      runInAction(() => {
+        this.activities = [...this.activities.filter((a) => a.id !== id)];
+        if (this.selectedActivity?.id === id) {
+          this.cancelSelectedActivity();
+        }
         this.loading = false;
       });
     } catch (error) {

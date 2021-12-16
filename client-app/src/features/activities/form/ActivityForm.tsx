@@ -4,7 +4,7 @@ import { Button, Form, Segment } from 'semantic-ui-react';
 import { useStore } from '../../../app/stores/store';
 
 export default observer(function ActivityForm() {
-  //#region Consts
+  //#region Const vars
   // Use the newly created activityStore to replace the previous handler functionality.
   const { activityStore } = useStore();
   const { selectedActivity, closeForm, createActivity, updateActivity, loading } = activityStore;
