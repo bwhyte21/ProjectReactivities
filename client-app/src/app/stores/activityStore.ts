@@ -1,7 +1,6 @@
 import { makeAutoObservable, runInAction } from 'mobx';
 import agent from '../api/agent';
 import { Activity } from '../models/activity';
-import { v4 as uuid } from 'uuid';
 
 export default class ActivityStore {
   // Activity properties ported from App.tsx
@@ -53,6 +52,7 @@ export default class ActivityStore {
     // If activity exists in memory, select it.
     if (activity) {
       this.selectedActivity = activity;
+      return activity;
     }
     // Else call api to load activity.
     else {
@@ -60,8 +60,11 @@ export default class ActivityStore {
       try {
         activity = await agent.Activities.details(id);
         this.setActivity(activity);
-        this.selectedActivity = activity;
+        runInAction(() => {
+          this.selectedActivity = activity;
+        });
         this.setLoadingInitial(false);
+        return activity;
       } catch (error) {
         console.log(error);
         this.setLoadingInitial(false);
@@ -95,7 +98,6 @@ export default class ActivityStore {
   // Create Activity action.
   createActivity = async (activity: Activity) => {
     this.loading = true;
-    activity.id = uuid();
     try {
       // Create a user id using uuid for the activity.
       await agent.Activities.create(activity);

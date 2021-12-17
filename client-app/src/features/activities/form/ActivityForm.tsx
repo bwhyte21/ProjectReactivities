@@ -1,16 +1,21 @@
 import { observer } from 'mobx-react-lite';
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 import { Button, Form, Segment } from 'semantic-ui-react';
+import LoadingComponent from '../../../app/layout/LoadingComponent';
 import { useStore } from '../../../app/stores/store';
+import { v4 as uuid } from 'uuid';
 
 export default observer(function ActivityForm() {
-  //#region Const vars
+  //#region Consts
+  // History to push states to.
+  const history = useHistory();
   // Use the newly created activityStore to replace the previous handler functionality.
   const { activityStore } = useStore();
-  const { selectedActivity, createActivity, updateActivity, loading } = activityStore;
-
-  // This will either be the selected activity or (??) the props in an activity object.
-  const initialState = selectedActivity ?? {
+  const { createActivity, updateActivity, loading, loadActivity, loadingInitial } = activityStore;
+  const { id } = useParams<{ id: string }>();
+  // We will use the useState hooks here to populate the initialState.
+  const [activity, setActivity] = useState({
     id: '',
     title: '',
     category: '',
@@ -18,10 +23,13 @@ export default observer(function ActivityForm() {
     date: '',
     city: '',
     venue: '',
-  };
+  });
 
-  // We will use the useState hooks here to populate the initialState.
-  const [activity, setActivity] = useState(initialState);
+  useEffect(() => {
+    if (id) {
+      loadActivity(id).then((activity) => setActivity(activity!));
+    }
+  }, [id, loadActivity]);
 
   //#endregion
 
@@ -29,7 +37,17 @@ export default observer(function ActivityForm() {
 
   function submitHandler() {
     // Submit Create or Edit activity form.
-    activity.id ? updateActivity(activity) : createActivity(activity);
+    if (activity.id.length === 0) {
+      let newActivity = {
+        ...activity,
+        id: uuid(),
+      };
+      // Go to new activity.
+      createActivity(newActivity).then(() => history.push(`/activities/${newActivity.id}`));
+    } else {
+      // Else the updated one.
+      updateActivity(activity).then(() => history.push(`/activities/${activity.id}`));
+    }
   }
 
   function inputChangeHandler(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -40,6 +58,11 @@ export default observer(function ActivityForm() {
   }
 
   //#endregion
+
+  // Check if we're loading.
+  if (loadingInitial) {
+    return <LoadingComponent content={'Loading...'} />;
+  }
 
   return (
     // "clearing" clears any previous floats inside this html. Gives the buttons at the bottom space to breathe.
