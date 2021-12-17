@@ -6,7 +6,7 @@
 * [ ] Uses ASP.NET Core identity for authentication
 * [x] Uses React with Typescript
 * [ ] Has a Client side login and register function for the React application
-* [ ] Uses React Router
+* [x] Uses React Router
 * [x] Uses AutoMapper in ASP.NET Core
 * [x] Uses Semantic UI for the... UI
 * [ ] Has a Photo Upload widget and creating user profile pages
