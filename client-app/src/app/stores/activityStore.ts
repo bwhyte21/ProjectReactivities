@@ -21,6 +21,20 @@ export default class ActivityStore {
     return Array.from(this.activityRegistry.values()).sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
   }
 
+  // Get group of activities by date.
+  get groupedActivities() {
+    return Object.entries(
+      this.activitiesByDate.reduce((activities, activity) => {
+        const date = activity.date;
+        // Check for a match on the activity for THIS date.
+        // If there is no match, create a new array.
+        // For each date we're going to have an array of activities.
+        activities[date] = activities[date] ? [...activities[date], activity] : [activity];
+        return activities;
+      }, {} as { [key: string]: Activity[] }),
+    );
+  }
+
   // #region Actions
   // It uses 'async' because it is returning a promise from 'agent'.
   loadActivities = async () => {
