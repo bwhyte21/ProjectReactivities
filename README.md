@@ -17,18 +17,13 @@
 * [ ] Has an ‘A’ rating for security from a well known security scanning site.
 
 ## Currently
-* Activity Delete button added!
-![ActivityDeleteBtnAdded](https://user-images.githubusercontent.com/4268536/143081024-f85b01db-46c7-4a27-bd66-6bb06ae00738.PNG)
-* Edit Activity feature added!
-![ActivityEditDetailsAdded](https://user-images.githubusercontent.com/4268536/143081025-a6705065-837b-4617-b203-44a9a8f889e1.PNG)
-* Create Activity feature added!
-![ActivityCreateFeatureAdded](https://user-images.githubusercontent.com/4268536/143081022-8d5a540b-c60c-47a0-a972-a1ac451533af.png)
-* Pending Activity creation animation in button!
-![ActivityCreationPendingAnim](https://user-images.githubusercontent.com/4268536/143137804-bc43ad41-41be-4c17-a923-b67d703bad00.png)
-* New activity displayed!
-![NewActivityCreated](https://user-images.githubusercontent.com/4268536/143137809-d1be0624-b042-4f8e-9bce-d6d43d931bda.PNG)
-* Activity list updated!
-![ActivityListUpdated](https://user-images.githubusercontent.com/4268536/143137806-8e3528e9-97be-4e68-99ab-e12447a51865.png)
-* App Loading on first visit / page refresh
-![AppLoadingAnim](https://user-images.githubusercontent.com/4268536/143137808-fc9dbe4c-a170-463e-8c92-873843b59124.PNG)
-
+* Home page added via Routing!
+![HomePageAdded](https://user-images.githubusercontent.com/4268536/146604159-15c031f6-e719-4b13-bf9a-a1c90f49766e.PNG)
+* Create Activity on its own page via Routing & MobX!
+![CreateActivityPage_via_Routing](https://user-images.githubusercontent.com/4268536/146604150-2f6afcf7-6dd9-4627-b821-b0cb28285018.PNG)
+* Edit Activity on its own page!
+![EditActivityPage_via_Routing_and_MobX](https://user-images.githubusercontent.com/4268536/146604156-c7c1d368-2353-4a45-8f65-8fe6049b396c.PNG)
+* Editing on its own page!
+![EditActivityPage_via_Routing](https://user-images.githubusercontent.com/4268536/146604152-b5afd8b2-77cc-4377-93c6-a847bce6d021.PNG)
+* Activities sorted by date in Activities page as well as working Navbar!
+![SortedActivities_with_WorkingNavbar](https://user-images.githubusercontent.com/4268536/146604160-18495dd9-ef64-4a07-bf04-1f06e39daab8.PNG)
