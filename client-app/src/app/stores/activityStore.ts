@@ -1,7 +1,6 @@
 import { makeAutoObservable, runInAction } from 'mobx';
 import agent from '../api/agent';
 import { Activity } from '../models/activity';
-import { v4 as uuid } from 'uuid';
 
 export default class ActivityStore {
   // Activity properties ported from App.tsx
@@ -26,7 +25,7 @@ export default class ActivityStore {
   // It uses 'async' because it is returning a promise from 'agent'.
   loadActivities = async () => {
     // Sync code is done outside of a trycatch block
-    //this.setLoadingInitial(true);
+    this.loadingInitial = true;
 
     // Async code is done inside a trycatch block.
     try {
@@ -35,11 +34,7 @@ export default class ActivityStore {
       const activities = await agent.Activities.list();
       // Populate the observable directly.
       activities.forEach((activity) => {
-        // Temp fix for date formatting.
-        activity.date = activity.date.split('T')[0];
-        // Mutate state via MobX. MobX does not use immutable structures, whereas, Redux does.
-        // "map".set(key, value)
-        this.activityRegistry.set(activity.id, activity);
+        this.setActivity(activity);
       });
       // Set loading initial flag.
       this.setLoadingInitial(false);
@@ -51,38 +46,58 @@ export default class ActivityStore {
     }
   };
 
+  // Load an Activity for Details.
+  loadActivity = async (id: string) => {
+    let activity = this.getActivity(id);
+    // If activity exists in memory, select it.
+    if (activity) {
+      this.selectedActivity = activity;
+      return activity;
+    }
+    // Else call api to load activity.
+    else {
+      this.loadingInitial = true;
+      try {
+        activity = await agent.Activities.details(id);
+        this.setActivity(activity);
+        runInAction(() => {
+          this.selectedActivity = activity;
+        });
+        this.setLoadingInitial(false);
+        return activity;
+      } catch (error) {
+        console.log(error);
+        this.setLoadingInitial(false);
+      }
+    }
+  };
+
+  // #region Helpers
+
+  // Get activity from registry.
+  private getActivity = (id: string) => {
+    return this.activityRegistry.get(id);
+  };
+
+  // Set(update) activity in registry.
+  private setActivity = (activity: Activity) => {
+    // Temp fix for date formatting.
+    activity.date = activity.date.split('T')[0];
+    // Mutate state via MobX. MobX does not use immutable structures, whereas, Redux does.
+    // "map".set(key, value)
+    this.activityRegistry.set(activity.id, activity);
+  };
+
+  // #endregion
+
   // Create a loading action to remove the use of runInAction().
   setLoadingInitial = (state: boolean) => {
     this.loadingInitial = state;
   };
 
-  // Select Activity action.
-  selectActivity = (id: string) => {
-    // Returns the activity that matches the "id".
-    this.selectedActivity = this.activityRegistry.get(id);
-  };
-
-  // Cancel Selected Activity action.
-  cancelSelectedActivity = () => {
-    this.selectedActivity = undefined;
-  };
-
-  // Open-a-form action. For activity creation or editing.
-  openForm = (id?: string) => {
-    // If user is editing an activity, select the activity, else cancel current selected activity if they decide to create a new one.
-    id ? this.selectActivity(id) : this.cancelSelectedActivity();
-    this.editMode = true;
-  };
-
-  // Close-a-form action.
-  closeForm = () => {
-    this.editMode = false;
-  };
-
   // Create Activity action.
   createActivity = async (activity: Activity) => {
     this.loading = true;
-    activity.id = uuid();
     try {
       // Create a user id using uuid for the activity.
       await agent.Activities.create(activity);
@@ -135,9 +150,6 @@ export default class ActivityStore {
       runInAction(() => {
         // Delete from registry.
         this.activityRegistry.delete(id);
-        if (this.selectedActivity?.id === id) {
-          this.cancelSelectedActivity();
-        }
         this.loading = false;
       });
     } catch (error) {
