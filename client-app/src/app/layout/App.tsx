@@ -13,16 +13,25 @@ function App() {
 
   return (
     <Fragment>
-      <NavBar />
-      <Container style={{ marginTop: '6.97385rem' }}>
-        {/* Component navigation via Routes */}
-        {/* Exact makes it so if a url shares a character, ignore the others that share that character. */}
-        <Route exact path="/" component={HomePage} />
-        <Route exact path="/activities" component={ActivityDashboard} />
-        <Route path="/activities/:id" component={ActivityDetails} />
-        {/* Create OR Edit an activity */}
-        <Route key={location.key} path={['/createActivity', '/manage/:id']} component={ActivityForm} />
-      </Container>
+      {/* Render home button separate from navbar */}
+      <Route exact path="/" component={HomePage} />
+      {/* (.+) means that any Route that matches the "/" + something else is going to match this particular Route */}
+      <Route
+        path={'/(.+)'}
+        render={() => (
+          <Fragment>
+            <NavBar />
+            <Container style={{ marginTop: '6.97385rem' }}>
+              {/* Component navigation via Routes */}
+              {/* Exact makes it so if a url shares a character, ignore the others that share that character. */}
+              <Route exact path="/activities" component={ActivityDashboard} />
+              <Route path="/activities/:id" component={ActivityDetails} />
+              {/* Create OR Edit an activity */}
+              <Route key={location.key} path={['/createActivity', '/manage/:id']} component={ActivityForm} />
+            </Container>
+          </Fragment>
+        )}
+      />
     </Fragment>
   );
 }

@@ -9,12 +9,13 @@ export default observer(function ActivityDashboard() {
   //#region Const(s)
   // Use the newly created activityStore to replace the previous handler functionality.
   const { activityStore } = useStore();
+  const {loadActivities, activityRegistry} = activityStore;
   //#endregion
 
   // Use the useEffect hook to use Axios to make our API call.
   useEffect(() => {
-    activityStore.loadActivities();
-  }, [activityStore]);
+    if(activityRegistry.size <= 1) {loadActivities();}
+  }, [activityRegistry.size, activityStore, loadActivities]);
 
   // Check to see if the app is loading before displaying the content.
   if (activityStore.loadingInitial) return <LoadingComponent content="Loading Reactivities..." />;
