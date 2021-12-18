@@ -17,11 +17,11 @@
 * [ ] Has an ‘A’ rating for security from a well known security scanning site.
 
 ## Currently
-* Home page added via Routing! (See updated style at bottom of list!)
+* Home page added via Routing! (See updated style further below!)
 ![HomePageAdded](https://user-images.githubusercontent.com/4268536/146604159-15c031f6-e719-4b13-bf9a-a1c90f49766e.PNG)
 * Create Activity on its own page via Routing & MobX!
 ![CreateActivityPage_via_Routing](https://user-images.githubusercontent.com/4268536/146604150-2f6afcf7-6dd9-4627-b821-b0cb28285018.PNG)
-* Edit Activity on its own page!
+* Edit Activity on its own details page! (See update page further below!)
 ![EditActivityPage_via_Routing_and_MobX](https://user-images.githubusercontent.com/4268536/146604156-c7c1d368-2353-4a45-8f65-8fe6049b396c.PNG)
 * Editing on its own page!
 ![EditActivityPage_via_Routing](https://user-images.githubusercontent.com/4268536/146604152-b5afd8b2-77cc-4377-93c6-a847bce6d021.PNG)
