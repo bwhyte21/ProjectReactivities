@@ -17,8 +17,8 @@
 * [ ] Has an ‘A’ rating for security from a well known security scanning site.
 
 ## Currently
-`* Home page added via Routing!`
-`![HomePageAdded](https://user-images.githubusercontent.com/4268536/146604159-15c031f6-e719-4b13-bf9a-a1c90f49766e.PNG)`
+~* Home page added via Routing!~
+~![HomePageAdded](https://user-images.githubusercontent.com/4268536/146604159-15c031f6-e719-4b13-bf9a-a1c90f49766e.PNG)~
 * Create Activity on its own page via Routing & MobX!
 ![CreateActivityPage_via_Routing](https://user-images.githubusercontent.com/4268536/146604150-2f6afcf7-6dd9-4627-b821-b0cb28285018.PNG)
 * Edit Activity on its own page!
