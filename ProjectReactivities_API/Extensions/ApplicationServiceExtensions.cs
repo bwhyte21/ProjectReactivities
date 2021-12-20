@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using FluentValidation.AspNetCore;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +16,12 @@ namespace ProjectReactivities_API.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config, string corsPolicy)
         {
+            #region Fluent Validation
+
+            services.AddControllers().AddFluentValidation(fluentConfig => { fluentConfig.RegisterValidatorsFromAssemblyContaining<Create>(); });
+
+            #endregion
+
             #region DbContext Service
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(config.GetConnectionString("DefaultConnection")));

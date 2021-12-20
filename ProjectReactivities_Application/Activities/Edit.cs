@@ -4,6 +4,7 @@ using ProjectReactivities_Domain;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using FluentValidation;
 
 namespace ProjectReactivities_Application.Activities
 {
@@ -18,6 +19,17 @@ namespace ProjectReactivities_Application.Activities
         public class Command : IRequest
         {
             public Activity Activity { get; set; }
+        }
+
+        /// <summary>
+        /// A sort of "middleware" to add validation rules to activity Create/Edit operations server-side. Validate with "Command" because it contains "Activity".
+        /// </summary>
+        public class CommandValidator : AbstractValidator<Command>
+        {
+            public CommandValidator()
+            {
+                RuleFor(x => x.Activity).SetValidator(new ActivityValidator());
+            }
         }
 
         public class Handler : IRequestHandler<Command>
