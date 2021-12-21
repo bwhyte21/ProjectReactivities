@@ -4,6 +4,7 @@ using ProjectReactivities_Domain;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using ProjectReactivities_Application.Core;
 
 namespace ProjectReactivities_Application.Activities
 {
@@ -13,14 +14,14 @@ namespace ProjectReactivities_Application.Activities
     public class Details
     {
         /// <summary>
-        /// A nested class for fetching a single Activity using the MediatR interface.
+        /// A nested class for fetching a single Activity Result using the MediatR interface and ApiResult.
         /// </summary>
-        public class Query : IRequest<Activity>
+        public class Query : IRequest<ApiResult<Activity>>
         {
             public Guid Id { get; set; }
         }
 
-        public class Handler : IRequestHandler<Query, Activity>
+        public class Handler : IRequestHandler<Query, ApiResult<Activity>>
         {
             private readonly ApplicationDbContext _db;
 
@@ -30,14 +31,15 @@ namespace ProjectReactivities_Application.Activities
             }
 
             /// <summary>
-            /// Collect the details for the Activity in question.
+            /// Collect the Activity ApiResult in question.
             /// </summary>
             /// <param name="request"></param>
             /// <param name="cancellationToken"></param>
             /// <returns></returns>
-            public async Task<Activity> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<ApiResult<Activity>> Handle(Query request, CancellationToken cancellationToken)
             {
-                return await _db.Activities.FindAsync(request.Id);
+                var activity = await _db.Activities.FindAsync(request.Id);
+                return ApiResult<Activity>.Success(activity);
             }
         }
     }
