@@ -113,7 +113,8 @@ namespace ProjectReactivities_API.Controllers
             activity.Id = id;
 
             // Pass it off to the handler
-            return Ok(await Mediator.Send(new Edit.Command { Activity = activity }));
+            var apiResult = await Mediator.Send(new Edit.Command { Activity = activity });
+            return HandleApiResult(apiResult);
         }
 
         /// <summary>
@@ -124,7 +125,8 @@ namespace ProjectReactivities_API.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteActivity(Guid id)
         {
-            return Ok(await Mediator.Send(new Delete.Command { Id = id }));
+            var apiResult = await Mediator.Send(new Delete.Command { Id = id });
+            return HandleApiResult(apiResult);
         }
     }
 }

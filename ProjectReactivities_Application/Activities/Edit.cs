@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using FluentValidation;
+using ProjectReactivities_Application.Core;
 
 namespace ProjectReactivities_Application.Activities
 {
@@ -16,7 +17,7 @@ namespace ProjectReactivities_Application.Activities
         /// <summary>
         /// We're going to use Command to send the modified fields out.
         /// </summary>
-        public class Command : IRequest
+        public class Command : IRequest<ApiResult<Unit>>
         {
             public Activity Activity { get; set; }
         }
@@ -32,7 +33,7 @@ namespace ProjectReactivities_Application.Activities
             }
         }
 
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IRequestHandler<Command, ApiResult<Unit>>
         {
             private readonly ApplicationDbContext _db;
             private readonly IMapper _mapper;
@@ -49,22 +50,24 @@ namespace ProjectReactivities_Application.Activities
             /// <param name="request"></param>
             /// <param name="cancellationToken"></param>
             /// <returns></returns>
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<ApiResult<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
                 // Retrieve the activity from the DB.
                 var activity = await _db.Activities.FindAsync(request.Activity.Id);
 
-                // Update the properties. 
-                //activity.Title = request.Activity.Title ?? activity.Title; // Setting properties manually.
+                // Update the properties.
+
+                // If null, return.
+                if (activity == null) return null;
 
                 // Map the properties using automapper; map each property from request into the object we wish to update.
                 _mapper.Map(request.Activity, activity);
 
                 // Save changes.
-                await _db.SaveChangesAsync(cancellationToken);
+                var apiResult = await _db.SaveChangesAsync(cancellationToken) > 0;
 
                 // Let the API controller know this task has completed.
-                return Unit.Value;
+                return !apiResult ? ApiResult<Unit>.Failure("Failed to edit activity.") : ApiResult<Unit>.Success(Unit.Value);
             }
         }
     }

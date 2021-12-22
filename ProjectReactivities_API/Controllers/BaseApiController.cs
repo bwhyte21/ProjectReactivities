@@ -21,13 +21,15 @@ namespace ProjectReactivities_API.Controllers
         protected IMediator Mediator => _mediator ??= HttpContext.RequestServices.GetService<IMediator>();
 
         /// <summary>
-        /// Return success if call to aPI is good.
+        /// Return success if call to API is good.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="result"></param>
         /// <returns></returns>
         protected ActionResult HandleApiResult<T>(ApiResult<T> result)
         {
+            if (result == null) { return NotFound(); }
+
             return result.IsSuccess switch
             {
                 true when result.Value != null => Ok(result.Value),
