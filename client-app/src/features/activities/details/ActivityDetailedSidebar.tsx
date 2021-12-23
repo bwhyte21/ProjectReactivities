@@ -1,10 +1,11 @@
 import { Segment, List, Label, Item, Image } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
+import { Fragment } from 'react';
 
 export default observer(function ActivityDetailedSidebar() {
   return (
-    <>
+    <Fragment>
       <Segment textAlign="center" style={{ border: 'none' }} attached="top" secondary inverted color="teal">
         3 People Going
       </Segment>
@@ -43,6 +44,6 @@ export default observer(function ActivityDetailedSidebar() {
           </Item>
         </List>
       </Segment>
-    </>
+    </Fragment>
   );
 });

@@ -8,7 +8,15 @@ namespace ProjectReactivities_API.Extensions
     {
         public static IApplicationBuilder AddApplicationMiddleware(this IApplicationBuilder app, IWebHostEnvironment env, string corsPolicy)
         {
-            if (env.IsDevelopment()) { app.UseDeveloperExceptionPage(); }
+            // Custom exception handling middleware.
+            app.UseMiddleware<ExceptionMiddlewareExtension>();
+
+            if (env.IsDevelopment())
+            {
+                //app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
+            }
 
             app.UseHttpsRedirection();
 

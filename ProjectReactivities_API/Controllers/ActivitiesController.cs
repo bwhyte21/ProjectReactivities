@@ -114,6 +114,7 @@ namespace ProjectReactivities_API.Controllers
 
             // Pass it off to the handler
             var apiResult = await Mediator.Send(new Edit.Command { Activity = activity });
+
             return HandleApiResult(apiResult);
         }
 
@@ -126,6 +127,7 @@ namespace ProjectReactivities_API.Controllers
         public async Task<IActionResult> DeleteActivity(Guid id)
         {
             var apiResult = await Mediator.Send(new Delete.Command { Id = id });
+
             return HandleApiResult(apiResult);
         }
     }

@@ -1,9 +1,10 @@
 import { observer } from 'mobx-react-lite';
+import { Fragment } from 'react';
 import { Segment, Header, Comment, Form, Button } from 'semantic-ui-react';
 
 export default observer(function ActivityDetailedChat() {
   return (
-    <>
+    <Fragment>
       <Segment textAlign="center" attached="top" inverted color="teal" style={{ border: 'none' }}>
         <Header>Chat about this event</Header>
       </Segment>
@@ -43,6 +44,6 @@ export default observer(function ActivityDetailedChat() {
           </Form>
         </Comment.Group>
       </Segment>
-    </>
+    </Fragment>
   );
 });

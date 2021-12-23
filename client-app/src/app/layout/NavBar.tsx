@@ -11,6 +11,7 @@ export default function NavBar() {
           Reactivities
         </Menu.Item>
         <Menu.Item as={NavLink} to='/activities' name="Activities" />
+        <Menu.Item as={NavLink} to='/errors' name="Error Testing" />
         <Menu.Item>
           {/* Because openForm takes an id, and Create does not provide one that exists, we pass in an empty param. */}
           <Button as={NavLink} to='/createActivity' positive content="Create Activity" />

@@ -35,7 +35,7 @@ namespace ProjectReactivities_Application.Activities
                 var activity = await _db.Activities.FindAsync(request.Id);
 
                 // If null, return.
-                if (activity == null) { return null; }
+                //if (activity == null) { return null; }
 
                 // Remove Activity from memory.
                 _db.Remove(activity);
