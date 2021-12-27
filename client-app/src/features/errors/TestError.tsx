@@ -1,9 +1,12 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import { Button, Header, Segment } from 'semantic-ui-react';
 import axios from 'axios';
+import ValidationErrors from './ValidationErrors';
 
 export default function TestErrors() {
   const baseUrl = 'https://localhost:5001/api/';
+  // Test validation errors in a local state.
+  const [errors, setErrors] = useState(null);
 
   function handleNotFound() {
     axios.get(baseUrl + 'ApiErrorTesting/not-found').catch((err) => console.log(err.response));
@@ -26,7 +29,7 @@ export default function TestErrors() {
   }
 
   function handleValidationError() {
-    axios.post(baseUrl + 'activities', {}).catch((err) => console.log(err.response));
+    axios.post(baseUrl + 'activities', {}).catch((err) => setErrors(err));
   }
 
   return (
@@ -42,6 +45,8 @@ export default function TestErrors() {
           <Button onClick={handleBadGuid} content="Bad Guid" basic primary />
         </Button.Group>
       </Segment>
+      {/* Check for errors */}
+      {errors && <ValidationErrors errors={errors} />}
     </Fragment>
   );
 }
