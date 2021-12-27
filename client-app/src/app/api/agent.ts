@@ -1,4 +1,6 @@
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
+import { promises } from 'dns';
+import { toast } from 'react-toastify';
 import { Activity } from '../models/activity';
 
 // Add delay to the application for the sake of demonstrating a loading animation.
@@ -12,15 +14,31 @@ const sleep = (delay: number) => {
 axios.defaults.baseURL = 'https://localhost:5001/api';
 
 // Call axios interceptor to demo loading.
-axios.interceptors.response.use(async (response) => {
-  try {
+axios.interceptors.response.use(
+  async (response) => {
     await sleep(1000);
     return response;
-  } catch (error) {
-    console.log(error);
-    return await Promise.reject(error);
-  }
-});
+  },
+  (error: AxiosError) => {
+    // "!" at the end, in case we don't get an error response.
+    const { data, status } = error.response!;
+    switch (status) {
+      case 400:
+        toast.error('bad request');
+        break;
+      case 401:
+        toast.error('unauthorized');
+        break;
+      case 404:
+        toast.error('not found');
+        break;
+      case 500:
+        toast.error('server error');
+        break;      
+    }
+    return Promise.reject(error);
+  },
+);
 
 // Capture the data from the api.
 // Add <T> for a generic type to responseBody for type-safety.

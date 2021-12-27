@@ -19,7 +19,7 @@ namespace ProjectReactivities_API.Extensions
         {
             #region Swagger
 
-            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title = "ApiSample", Version = "v1" }); });
+            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title = "Reactivities", Version = "v1" }); });
 
             #endregion
 
