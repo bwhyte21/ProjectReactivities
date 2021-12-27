@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { promises } from 'dns';
 import { toast } from 'react-toastify';
+import { history } from '../..';
 import { Activity } from '../models/activity';
 
 // Add delay to the application for the sake of demonstrating a loading animation.
@@ -30,7 +31,8 @@ axios.interceptors.response.use(
         toast.error('unauthorized');
         break;
       case 404:
-        toast.error('not found');
+        // Send user to "not found" page, even with one not physically present.
+        history.push('/not-found');
         break;
       case 500:
         toast.error('server error');
