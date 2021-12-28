@@ -10,6 +10,7 @@ import ActivityDetails from '../../features/activities/details/ActivityDetails';
 import TestError from '../../features/errors/TestError';
 import { ToastContainer } from 'react-toastify';
 import NotFound from '../../features/errors/NotFound';
+import ServerError from '../../features/errors/ServerError';
 
 function App() {
   const location = useLocation();
@@ -30,13 +31,14 @@ function App() {
               {/* Component navigation via Routes */}
               {/* Use switch to make Routes exclusive so the 404 page does not appear everywhere. Only one page will be active at any one time. */}
               <Switch>
-              {/* Exact makes it so if a url shares a character, ignore the others that share that character. */}
-              <Route exact path="/activities" component={ActivityDashboard} />
-              <Route path="/activities/:id" component={ActivityDetails} />
-              {/* Create OR Edit an activity */}
-              <Route key={location.key} path={['/createActivity', '/manage/:id']} component={ActivityForm} />
-              <Route path="/errors" component={TestError} />
-              <Route component={NotFound}/>
+                {/* Exact makes it so if a url shares a character, ignore the others that share that character. */}
+                <Route exact path="/activities" component={ActivityDashboard} />
+                <Route path="/activities/:id" component={ActivityDetails} />
+                {/* Create OR Edit an activity */}
+                <Route key={location.key} path={['/createActivity', '/manage/:id']} component={ActivityForm} />
+                <Route path="/errors" component={TestError} />
+                <Route path="/server-error" component={ServerError} />
+                <Route component={NotFound} />
               </Switch>
             </Container>
           </Fragment>

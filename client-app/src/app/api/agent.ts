@@ -1,8 +1,8 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import { promises } from 'dns';
 import { toast } from 'react-toastify';
 import { history } from '../..';
 import { Activity } from '../models/activity';
+import { store } from '../stores/store';
 
 // Add delay to the application for the sake of demonstrating a loading animation.
 const sleep = (delay: number) => {
@@ -22,9 +22,16 @@ axios.interceptors.response.use(
   },
   (error: AxiosError) => {
     // "!" at the end, in case we don't get an error response.
-    const { data, status } = error.response!;
+    const { data, status, config } = error.response!;
     switch (status) {
       case 400:
+        if(typeof data === 'string'){
+          toast.error(data);
+        }
+        // Redirect user to 'Not Found' page.
+        if (config.method === 'get' && data.errors.hasOwnProperty('id')) {
+          history.push('/not-found');
+        }
         if (data.errors) {
           // Validation error response from api.
           const modalStateErrors = [];
@@ -35,8 +42,6 @@ axios.interceptors.response.use(
           }
           // Flatten the array to get the list of strings.
           throw modalStateErrors.flat();
-        } else {
-          toast.error(data);
         }
         break;
       case 401:
@@ -47,7 +52,10 @@ axios.interceptors.response.use(
         history.push('/not-found');
         break;
       case 500:
-        toast.error('500: Server Error');
+        // Use recently added 'commonStore' for Server Error page.
+        store.commonStore.setServerError(data);
+        // Send user to Server Error route.
+        history.push('/server-error');
         break;
     }
     return Promise.reject(error);

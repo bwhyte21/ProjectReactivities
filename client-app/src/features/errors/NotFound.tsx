@@ -6,7 +6,7 @@ export default function NotFound() {
     <Segment placeholder>
       <Header icon>
         <Icon name="search" />
-        404 - This is not the page you're looking for.
+        Error 404 - This is not the page you're looking for.
       </Header>
       <Segment.Inline>
         <Button as={Link} to="/activities" primary>

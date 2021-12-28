@@ -14,13 +14,13 @@ namespace ProjectReactivities_API.Controllers
         [HttpGet("bad-request")]
         public ActionResult GetBadRequest()
         {
-            return BadRequest("This is a bad request");
+            return BadRequest("400: Bad Request");
         }
 
         [HttpGet("server-error")]
         public ActionResult GetServerError()
         {
-            throw new Exception("This is a server error");
+            throw new Exception("500: Server Error");
         }
 
         [HttpGet("unauthorized")]
