@@ -1,5 +1,8 @@
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
+import { toast } from 'react-toastify';
+import { history } from '../..';
 import { Activity } from '../models/activity';
+import { store } from '../stores/store';
 
 // Add delay to the application for the sake of demonstrating a loading animation.
 const sleep = (delay: number) => {
@@ -12,15 +15,52 @@ const sleep = (delay: number) => {
 axios.defaults.baseURL = 'https://localhost:5001/api';
 
 // Call axios interceptor to demo loading.
-axios.interceptors.response.use(async (response) => {
-  try {
+axios.interceptors.response.use(
+  async (response) => {
     await sleep(1000);
     return response;
-  } catch (error) {
-    console.log(error);
-    return await Promise.reject(error);
-  }
-});
+  },
+  (error: AxiosError) => {
+    // "!" at the end, in case we don't get an error response.
+    const { data, status, config } = error.response!;
+    switch (status) {
+      case 400:
+        if(typeof data === 'string'){
+          toast.error(data);
+        }
+        // Redirect user to 'Not Found' page.
+        if (config.method === 'get' && data.errors.hasOwnProperty('id')) {
+          history.push('/not-found');
+        }
+        if (data.errors) {
+          // Validation error response from api.
+          const modalStateErrors = [];
+          for (const key in data.errors) {
+            if (data.errors[key]) {
+              modalStateErrors.push(data.errors[key]);
+            }
+          }
+          // Flatten the array to get the list of strings.
+          throw modalStateErrors.flat();
+        }
+        break;
+      case 401:
+        toast.error('401: Unauthorized');
+        break;
+      case 404:
+        // Send user to "not found" page, even with one not physically present.
+        history.push('/not-found');
+        break;
+      case 500:
+        // Use recently added 'commonStore' for Server Error page.
+        store.commonStore.setServerError(data);
+        // Send user to Server Error route.
+        history.push('/server-error');
+        break;
+    }
+    return Promise.reject(error);
+  },
+);
 
 // Capture the data from the api.
 // Add <T> for a generic type to responseBody for type-safety.

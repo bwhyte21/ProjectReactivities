@@ -5,6 +5,7 @@ using ProjectReactivities_Domain;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using ProjectReactivities_Application.Core;
 
 namespace ProjectReactivities_Application.Activities
 {
@@ -14,14 +15,14 @@ namespace ProjectReactivities_Application.Activities
     public class List
     {
         /// <summary>
-        /// A nested class for fetching data (list of activities) using the MediatR interface.
+        /// A nested class for fetching data (list of activities) using the MediatR interface and ApiResult.
         /// </summary>
-        public class Query : IRequest<List<Activity>> { }
+        public class Query : IRequest<ApiResult<List<Activity>>> { }
 
         /// <summary>
         /// A Handler class for the Query class
         /// </summary>
-        public class Handler : IRequestHandler<Query, List<Activity>>
+        public class Handler : IRequestHandler<Query, ApiResult<List<Activity>>>
         {
             private readonly ApplicationDbContext _db;
 
@@ -35,14 +36,15 @@ namespace ProjectReactivities_Application.Activities
             }
 
             /// <summary>
-            /// Return list of activities from mediated handler.
+            /// Return list of activities within a result object from mediated handler.
             /// </summary>
             /// <param name="request"></param>
             /// <param name="cancellationToken"></param>
             /// <returns></returns>
-            public async Task<List<Activity>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<ApiResult<List<Activity>>> Handle(Query request, CancellationToken cancellationToken)
             {
-                return await _db.Activities.ToListAsync(cancellationToken);
+                var result = await _db.Activities.ToListAsync(cancellationToken);
+                return ApiResult<List<Activity>>.Success(result);
             }
         }
     }

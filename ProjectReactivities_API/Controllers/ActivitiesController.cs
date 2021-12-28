@@ -44,7 +44,7 @@ namespace ProjectReactivities_API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<List<Activity>>> GetActivities()
+        public async Task<IActionResult> GetActivities()
         {
             #region Old DI Code
 
@@ -57,8 +57,10 @@ namespace ProjectReactivities_API.Controllers
             #endregion
 
             // Using MediatR from the App Layer to get list of all activities.
-            // Using newly added property from BaseApi.
-            return await Mediator.Send(new List.Query());
+            // And return it via HandleApiResult.
+            var apiResult = await Mediator.Send(new List.Query());
+
+            return HandleApiResult(apiResult);
         }
 
         /// <summary>
@@ -67,7 +69,7 @@ namespace ProjectReactivities_API.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id:guid}")] // equivalence: activity/id except THIS particular endpoint has a route constraint ("id:guid") to decide if the value passed in is acceptable.
-        public async Task<ActionResult<Activity>> GetActivity(Guid id)
+        public async Task<IActionResult> GetActivity(Guid id)
         {
             #region Old DI Code
 
@@ -78,9 +80,11 @@ namespace ProjectReactivities_API.Controllers
 
             #endregion
 
-            // Return activity based on id passed in (selected)
-            // Using newly added MediatR
-            return await Mediator.Send(new Details.Query { Id = id });
+            // Return activity based on id passed in (selected) using MediatR.
+            var apiResult = await Mediator.Send(new Details.Query { Id = id });
+
+            // Return result using new api result handler method.
+            return HandleApiResult(apiResult);
         }
 
         /// <summary>
@@ -91,7 +95,9 @@ namespace ProjectReactivities_API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateActivity(Activity activity)
         {
-            return Ok(await Mediator.Send(new Create.Command { Activity = activity }));
+            var apiResult = await Mediator.Send(new Create.Command { Activity = activity });
+
+            return HandleApiResult(apiResult);
         }
 
         /// <summary>
@@ -107,7 +113,9 @@ namespace ProjectReactivities_API.Controllers
             activity.Id = id;
 
             // Pass it off to the handler
-            return Ok(await Mediator.Send(new Edit.Command { Activity = activity }));
+            var apiResult = await Mediator.Send(new Edit.Command { Activity = activity });
+
+            return HandleApiResult(apiResult);
         }
 
         /// <summary>
@@ -118,7 +126,9 @@ namespace ProjectReactivities_API.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteActivity(Guid id)
         {
-            return Ok(await Mediator.Send(new Delete.Command { Id = id }));
+            var apiResult = await Mediator.Send(new Delete.Command { Id = id });
+
+            return HandleApiResult(apiResult);
         }
     }
 }

@@ -1,7 +1,9 @@
-﻿using MediatR;
+﻿using FluentValidation.AspNetCore;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 using ProjectReactivities_Application.Activities;
 using ProjectReactivities_Application.Core;
 using ProjectReactivities_DataAccess.Data;
@@ -15,6 +17,18 @@ namespace ProjectReactivities_API.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config, string corsPolicy)
         {
+            #region Swagger
+
+            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title = "Reactivities", Version = "v1" }); });
+
+            #endregion
+
+            #region Fluent Validation
+
+            services.AddControllers().AddFluentValidation(fluentConfig => { fluentConfig.RegisterValidatorsFromAssemblyContaining<Create>(); });
+
+            #endregion
+
             #region DbContext Service
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(config.GetConnectionString("DefaultConnection")));

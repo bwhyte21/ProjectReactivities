@@ -37,7 +37,7 @@ namespace ProjectReactivities_API
         // Middleware goes in here.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // All ()'s here are middlewares.
+            // All ()'s here are application middleware.
             app.AddApplicationMiddleware(env, _corsPolicy);
         }
     }

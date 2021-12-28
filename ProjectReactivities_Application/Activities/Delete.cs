@@ -3,6 +3,7 @@ using ProjectReactivities_DataAccess.Data;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using ProjectReactivities_Application.Core;
 
 namespace ProjectReactivities_Application.Activities
 {
@@ -14,12 +15,12 @@ namespace ProjectReactivities_Application.Activities
         /// <summary>
         /// We're going to Delete an Activity based on the Id.
         /// </summary>
-        public class Command : IRequest
+        public class Command : IRequest<ApiResult<Unit>>
         {
             public Guid Id { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IRequestHandler<Command, ApiResult<Unit>>
         {
             private readonly ApplicationDbContext _db;
 
@@ -28,18 +29,21 @@ namespace ProjectReactivities_Application.Activities
                 _db = db;
             }
 
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<ApiResult<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
                 // Get the Activity.
                 var activity = await _db.Activities.FindAsync(request.Id);
 
+                // If null, return.
+                //if (activity == null) { return null; }
+
                 // Remove Activity from memory.
-                _db.Activities.Remove(activity);
+                _db.Remove(activity);
 
                 // Save changes to remove activity from the db.
-                await _db.SaveChangesAsync(cancellationToken);
+                var apiResult = await _db.SaveChangesAsync(cancellationToken) > 0;
 
-                return Unit.Value;
+                return !apiResult ? ApiResult<Unit>.Failure("Failed to delete activity.") : ApiResult<Unit>.Success(Unit.Value);
             }
         }
     }
