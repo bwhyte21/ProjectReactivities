@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import { makeAutoObservable, runInAction } from 'mobx';
 import agent from '../api/agent';
 import { Activity } from '../models/activity';
@@ -9,7 +10,7 @@ export default class ActivityStore {
   selectedActivity: Activity | undefined = undefined;
   editMode = false;
   loading = false;
-  loadingInitial = true;
+  loadingInitial = false;
 
   constructor() {
     // 'makeAutoObservable' essentially handles all the setting of properties so developers don't have to... THIS IS WAY TOO EASY! WTH?!
@@ -18,14 +19,15 @@ export default class ActivityStore {
 
   // Get and sort the activities by date using a computed property.
   get activitiesByDate() {
-    return Array.from(this.activityRegistry.values()).sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
+    return Array.from(this.activityRegistry.values()).sort((a, b) => a.date!.getTime() - b.date!.getTime());
   }
 
   // Get group of activities by date.
   get groupedActivities() {
     return Object.entries(
       this.activitiesByDate.reduce((activities, activity) => {
-        const date = activity.date;
+        // Cast the date to a string.
+        const date = format(activity.date!, 'dd MMM yyyy');
         // Check for a match on the activity for THIS date.
         // If there is no match, create a new array.
         // For each date we're going to have an array of activities.
@@ -96,7 +98,7 @@ export default class ActivityStore {
   // Set(update) activity in registry.
   private setActivity = (activity: Activity) => {
     // Temp fix for date formatting.
-    activity.date = activity.date.split('T')[0];
+    activity.date = new Date(activity.date!);
     // Mutate state via MobX. MobX does not use immutable structures, whereas, Redux does.
     // "map".set(key, value)
     this.activityRegistry.set(activity.id, activity);
