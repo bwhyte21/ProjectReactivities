@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ProjectReactivities_Application.Core;
+using System;
+using System.Net;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace ProjectReactivities_API.Extensions
 {
@@ -45,9 +43,9 @@ namespace ProjectReactivities_API.Extensions
                 context.Response.ContentType = "application/json";
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-                // If in Dev mode, show exception, otherwise display message. Only devs should see exceptions.
+                // If in Dev mode, show exception, otherwise display message. Only Devs should see exceptions.
                 var response = _env.IsDevelopment()
-                    ? new ApiException(context.Response.StatusCode, ex.Message, ex.StackTrace?.ToString())
+                    ? new ApiException(context.Response.StatusCode, ex.Message, ex.StackTrace)
                     : new ApiException(context.Response.StatusCode, "Server Error");
 
                 // Serialize the json.

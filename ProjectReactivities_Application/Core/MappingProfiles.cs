@@ -1,14 +1,13 @@
 ﻿using AutoMapper;
 using ProjectReactivities_Domain;
 
-namespace ProjectReactivities_Application.Core
+namespace ProjectReactivities_Application.Core;
+
+public class MappingProfiles : Profile
 {
-  public class MappingProfiles : Profile
+    public MappingProfiles()
     {
-        public MappingProfiles()
-        {
-            // Mapping an Activity to an Activity (for the Edit functionality).
-            CreateMap<Activity, Activity>();
-        }
+        // Mapping an Activity to an Activity (for the Edit functionality).
+        CreateMap<Activity, Activity>();
     }
 }

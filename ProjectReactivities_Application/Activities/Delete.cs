@@ -1,50 +1,49 @@
 ﻿using MediatR;
+using ProjectReactivities_Application.Core;
 using ProjectReactivities_DataAccess.Data;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using ProjectReactivities_Application.Core;
 
-namespace ProjectReactivities_Application.Activities
+namespace ProjectReactivities_Application.Activities;
+
+/// <summary>
+/// Delete an Activity.
+/// </summary>
+public class Delete
 {
     /// <summary>
-    /// Delete an Activity.
+    /// We're going to Delete an Activity based on the Id.
     /// </summary>
-    public class Delete
+    public class Command : IRequest<ApiResult<Unit>>
     {
-        /// <summary>
-        /// We're going to Delete an Activity based on the Id.
-        /// </summary>
-        public class Command : IRequest<ApiResult<Unit>>
+        public Guid Id { get; set; }
+    }
+
+    public class Handler : IRequestHandler<Command, ApiResult<Unit>>
+    {
+        private readonly ApplicationDbContext _db;
+
+        public Handler(ApplicationDbContext db)
         {
-            public Guid Id { get; set; }
+            _db = db;
         }
 
-        public class Handler : IRequestHandler<Command, ApiResult<Unit>>
+        public async Task<ApiResult<Unit>> Handle(Command request, CancellationToken cancellationToken)
         {
-            private readonly ApplicationDbContext _db;
+            // Get the Activity.
+            var activity = await _db.Activities.FindAsync(request.Id);
 
-            public Handler(ApplicationDbContext db)
-            {
-                _db = db;
-            }
+            // If null, return.
+            //if (activity == null) { return null; }
 
-            public async Task<ApiResult<Unit>> Handle(Command request, CancellationToken cancellationToken)
-            {
-                // Get the Activity.
-                var activity = await _db.Activities.FindAsync(request.Id);
+            // Remove Activity from memory.
+            _db.Remove(activity);
 
-                // If null, return.
-                //if (activity == null) { return null; }
+            // Save changes to remove activity from the db.
+            var apiResult = await _db.SaveChangesAsync(cancellationToken) > 0;
 
-                // Remove Activity from memory.
-                _db.Remove(activity);
-
-                // Save changes to remove activity from the db.
-                var apiResult = await _db.SaveChangesAsync(cancellationToken) > 0;
-
-                return !apiResult ? ApiResult<Unit>.Failure("Failed to delete activity.") : ApiResult<Unit>.Success(Unit.Value);
-            }
+            return !apiResult ? ApiResult<Unit>.Failure("Failed to delete activity.") : ApiResult<Unit>.Success(Unit.Value);
         }
     }
 }

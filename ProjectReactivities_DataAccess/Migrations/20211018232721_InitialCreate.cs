@@ -1,9 +1,9 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+using System;
 
-namespace ProjectReactivities_DataAccess.Migrations
-{
-    public partial class InitialCreate : Migration
+namespace ProjectReactivities_DataAccess.Migrations;
+
+public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -31,4 +31,4 @@ namespace ProjectReactivities_DataAccess.Migrations
                 name: "Activities");
         }
     }
-}
+

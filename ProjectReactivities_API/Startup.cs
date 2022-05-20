@@ -4,41 +4,41 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectReactivities_API.Extensions;
 
-namespace ProjectReactivities_API
+namespace ProjectReactivities_API;
+
+public class Startup
 {
-    public class Startup
+    // Remodeling configuration member to a private one.
+    private readonly IConfiguration _config;
+    private readonly string _corsPolicy = "CorsPolicy";
+
+    public Startup(IConfiguration config)
     {
-        // Remodeling configuration member to a private one.
-        private readonly IConfiguration _config;
-        private readonly string _corsPolicy = "CorsPolicy";
+        _config = config;
+    }
 
-        public Startup(IConfiguration config)
-        {
-            _config = config;
-        }
+    // This method gets called by the runtime. Use this method to add services to the container. (Dependency Injection container)
+    public void ConfigureServices(IServiceCollection services)
+    {
+        #region Controllers Service
 
-        // This method gets called by the runtime. Use this method to add services to the container. (Dependency Injection container)
-        public void ConfigureServices(IServiceCollection services)
-        {
-            #region Controllers Service
+        services.AddControllers();
 
-            services.AddControllers();
+        #endregion
 
-            #endregion
+        #region Other Services
 
-            #region Other Services
+        services.AddApplicationServices(_config, _corsPolicy);
+        services.AddIdentityServices(_config);
 
-            services.AddApplicationServices(_config, _corsPolicy);
+        #endregion
+    }
 
-            #endregion
-        }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        // Middleware goes in here.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            // All ()'s here are application middleware.
-            app.AddApplicationMiddleware(env, _corsPolicy);
-        }
+    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    // Middleware goes in here.
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        // All ()'s here are application middleware.
+        app.AddApplicationMiddleware(env, _corsPolicy);
     }
 }

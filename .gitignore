@@ -365,3 +365,4 @@ FodyWeavers.xsd
 /ProjectReactivities_API/appsettings.Development.json
 /ProjectReactivities_API/Properties/launchSettings.json
 /ProjectReactivities_Application/GlobalSuppressions.cs
+/ProjectReactivities_API/GlobalSuppressions.cs
