@@ -1,5 +1,5 @@
 # ProjectReactivities
-* A multi-project solution created with the combined forces of .Net 5 (backend), React 17 (frontend), and MobX 6 (state management)
+* A multi-project solution created with the combined forces of .Net 5 => 6 (backend), React 17 (frontend), and MobX 6 (state management)
 
 ## Project ToDo checklist
 * [x] Uses Clean Architecture and the CQRS + Mediator pattern
