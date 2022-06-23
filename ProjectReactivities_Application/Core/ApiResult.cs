@@ -15,12 +15,12 @@ public class ApiResult<T>
     /// </summary>
     /// <param name="value"></param>
     /// <returns></returns>
-    public static ApiResult<T> Success(T value) => new ApiResult<T> { IsSuccess = true, Value = value };
+    public static ApiResult<T> Success(T value) => new() { IsSuccess = true, Value = value };
 
     /// <summary>
     /// If activity value not found.
     /// </summary>
     /// <param name="error"></param>
     /// <returns></returns>
-    public static ApiResult<T> Failure(string error) => new ApiResult<T> { IsSuccess = false, Error = error };
+    public static ApiResult<T> Failure(string error) => new() { IsSuccess = false, Error = error };
 }
