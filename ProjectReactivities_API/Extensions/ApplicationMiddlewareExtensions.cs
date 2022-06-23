@@ -4,7 +4,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace ProjectReactivities_API.Extensions
 {
-    public static class ApplicationMiddlewareExtension
+    public static class ApplicationMiddlewareExtensions
     {
         public static IApplicationBuilder AddApplicationMiddleware(this IApplicationBuilder app, IWebHostEnvironment env, string corsPolicy)
         {
