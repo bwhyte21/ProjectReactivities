@@ -10,7 +10,7 @@ public class Startup
 {
     // Remodeling configuration member to a private one.
     private readonly IConfiguration _config;
-    private readonly string _corsPolicy = "CorsPolicy";
+    private const string CorsPolicy = "CorsPolicy";
 
     public Startup(IConfiguration config)
     {
@@ -28,7 +28,7 @@ public class Startup
 
         #region Other Services
 
-        services.AddApplicationServices(_config, _corsPolicy);
+        services.AddApplicationServices(_config, CorsPolicy);
         services.AddIdentityServices(_config);
 
         #endregion
@@ -39,6 +39,6 @@ public class Startup
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         // All ()'s here are application middleware.
-        app.AddApplicationMiddleware(env, _corsPolicy);
+        app.AddApplicationMiddleware(env, CorsPolicy);
     }
 }
