@@ -1,4 +1,5 @@
-﻿using ProjectReactivities_DataAccess.Data;
+﻿using Microsoft.AspNetCore.Identity;
+using ProjectReactivities_DataAccess.Data;
 using ProjectReactivities_Domain;
 using System;
 using System.Collections.Generic;
@@ -9,9 +10,46 @@ namespace ProjectReactivities_DataAccess.Initializer;
 
 public class Seed
 {
-    // No need for a new instance, just make this task static.
-    public static async Task SeedData(ApplicationDbContext context)
+    /// <summary>
+    /// No need for a new instance, just make this task static.
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="userManager"></param>
+    /// <returns></returns>
+    public static async Task SeedData(ApplicationDbContext context, UserManager<AppUser> userManager)
     {
+        // If there are no existing users in the DB, add some, otherwise, Seed users.
+        if (!userManager.Users.Any())
+        {
+            var users = new List<AppUser>
+            {
+                new()
+                {
+                    DisplayName = "Zach",
+                    UserName = "zach",
+                    Email = "blkrnger@test.com"
+                },
+                new()
+                {
+                    DisplayName = "Tommy",
+                    UserName = "tommy",
+                    Email = "grnrnger@test.com"
+                },
+                new()
+                {
+                    DisplayName = "Billy",
+                    UserName = "billy",
+                    Email = "blurnger@test.com"
+                },
+            };
+
+            foreach (var user in users)
+            {
+                // Default training password for seeded users.
+                await userManager.CreateAsync(user, "P@$$w0rd!");
+            }
+        }
+        
         // If there are any activities, return, otherwise, Seed Data to DB.
         if (context.Activities.Any()) { return; }
 

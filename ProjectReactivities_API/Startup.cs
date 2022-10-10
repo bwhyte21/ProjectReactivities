@@ -12,12 +12,19 @@ public class Startup
     private readonly IConfiguration _config;
     private const string CorsPolicy = "CorsPolicy";
 
+    /// <summary>
+    /// CTOR.
+    /// </summary>
+    /// <param name="config"></param>
     public Startup(IConfiguration config)
     {
         _config = config;
     }
 
-    // This method gets called by the runtime. Use this method to add services to the container. (Dependency Injection container)
+    /// <summary>
+    /// This method gets called by the runtime. Use this method to add services to the container. (Dependency Injection container)
+    /// </summary>
+    /// <param name="services"></param>
     public void ConfigureServices(IServiceCollection services)
     {
         #region Controllers Service
@@ -34,8 +41,12 @@ public class Startup
         #endregion
     }
 
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    // Middleware goes in here.
+    /// <summary>
+    /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    /// Middleware goes in here.
+    /// </summary>
+    /// <param name="app"></param>
+    /// <param name="env"></param>
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         // All ()'s here are application middleware.

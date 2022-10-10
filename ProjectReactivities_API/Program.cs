@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ProjectReactivities_DataAccess.Data;
 using ProjectReactivities_DataAccess.Initializer;
+using ProjectReactivities_Domain;
 using System;
 using System.Threading.Tasks;
 
@@ -33,11 +35,14 @@ public class Program
             // Acquire data context as a service.
             var dataContext = services.GetRequiredService<ApplicationDbContext>();
 
+            // Acquire user manager as a service.
+            var userManager = services.GetRequiredService<UserManager<AppUser>>();
+
             // Apply any pending migrations.
             await dataContext.Database.MigrateAsync();
 
             // Seed database after the migration.
-            await Seed.SeedData(dataContext);
+            await Seed.SeedData(dataContext, userManager);
         }
         catch (Exception ex)
         {
